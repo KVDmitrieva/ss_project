@@ -1,11 +1,12 @@
-from hw_ss.metric.cer_metric import ArgmaxCERMetric, BeamSearchCERMetric, LMBeamSearchCERMetric
-from hw_ss.metric.wer_metric import ArgmaxWERMetric, BeamSearchWERMetric, LMBeamSearchWERMetric
+from hw_ss.metric.pesq_metric import PESQMetric
+from hw_ss.metric.sdr_metric import SDRMetric
+from hw_ss.metric.si_sdr_metric import SISDRMetric
+from hw_ss.metric.stoi_metric import STOIMetric
+
 
 __all__ = [
-    "ArgmaxWERMetric",
-    "ArgmaxCERMetric",
-    "BeamSearchWERMetric",
-    "BeamSearchCERMetric",
-    "LMBeamSearchWERMetric",
-    "LMBeamSearchCERMetric",
+    "PESQMetric",
+    "SDRMetric",
+    "SISDRMetric",
+    "STOIMetric"
 ]
