@@ -12,11 +12,11 @@ gzip -d lm/3-gram.arpa.gz
 Add your model config to `hw_asr/configs/` and run:
 
 ```shell
-python3 train.py -c hw_asr/configs/your_config.json
+python3 train.py -c hw_ss/configs/your_config.json
 ```
 In order to recreate results, use `train_jasper.json`:
 ```shell
-python3 train.py -c hw_asr/configs/train_jasper.json
+python3 train.py -c hw_ss/configs/train_jasper.json
 ```
 By default, config assumes that it is used in kaggle with [librispeech](https://www.kaggle.com/datasets/a24998667/librispeech/). If you use other trainig sources, you may want to change `data_dir` path in config.
 ## Test running guide
