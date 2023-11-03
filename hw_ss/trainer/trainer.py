@@ -11,9 +11,7 @@ from torchvision.transforms import ToTensor
 from tqdm import tqdm
 
 from hw_ss.base import BaseTrainer
-from hw_ss.base.base_text_encoder import BaseTextEncoder
 from hw_ss.logger.utils import plot_spectrogram_to_buf
-from hw_ss.metric.utils import calc_cer, calc_wer
 from hw_ss.utils import inf_loop, MetricTracker
 
 
@@ -31,7 +29,6 @@ class Trainer(BaseTrainer):
             config,
             device,
             dataloaders,
-            text_encoder,
             lr_scheduler=None,
             len_epoch=None,
             beam_size=None,
@@ -39,7 +36,6 @@ class Trainer(BaseTrainer):
     ):
         super().__init__(model, criterion, metrics, optimizer, lr_scheduler, config, device)
         self.skip_oom = skip_oom
-        self.text_encoder = text_encoder
         self.config = config
         self.train_dataloader = dataloaders["train"]
         if len_epoch is None:
@@ -66,7 +62,7 @@ class Trainer(BaseTrainer):
         """
         Move all necessary tensors to the HPU
         """
-        for tensor_for_gpu in ["spectrogram", "text_encoded"]:
+        for tensor_for_gpu in ["spectrogram"]:
             batch[tensor_for_gpu] = batch[tensor_for_gpu].to(device)
         return batch
 
@@ -217,33 +213,35 @@ class Trainer(BaseTrainer):
         if self.writer is None:
             return
 
-        tuple = list(zip(text, log_probs, log_probs_length, audio_path))
-        shuffle(tuple)
-        rows = {}
-        for target, log_prob, log_prob_length, one_audio_path in tuple[:examples_to_log]:
-            target = BaseTextEncoder.normalize_text(target)
+        raise NotImplementedError()
 
-            argmax_inds = log_prob[:int(log_prob_length)].cpu().argmax(-1).numpy()
-            argmax_text_raw = self.text_encoder.decode(argmax_inds)
-            argmax_text = self.text_encoder.ctc_decode(argmax_inds)
-            wer = calc_wer(target, argmax_text) * 100
-            cer = calc_cer(target, argmax_text) * 100
-
-            # beam_pred = self.text_encoder.ctc_beam_search(log_prob, log_prob_length, self.beam_size)[0].text
-            # beam_wer = calc_wer(target, beam_pred) * 100
-            # beam_cer = calc_cer(target, beam_pred) * 100
-
-            rows[Path(one_audio_path).name] = {
-                "target": target,
-                "raw prediction": argmax_text_raw,
-                "argmax predictions": argmax_text,
-                # "beam predictions": beam_pred,
-                "argmax wer": wer,
-                "argmax cer": cer,
-                # "beam_wer": beam_wer,
-                # "beam_cer": beam_cer,
-            }
-        self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
+        # tuple = list(zip(text, log_probs, log_probs_length, audio_path))
+        # shuffle(tuple)
+        # rows = {}
+        # for target, log_prob, log_prob_length, one_audio_path in tuple[:examples_to_log]:
+        #     target = BaseTextEncoder.normalize_text(target)
+        #
+        #     argmax_inds = log_prob[:int(log_prob_length)].cpu().argmax(-1).numpy()
+        #     argmax_text_raw = self.text_encoder.decode(argmax_inds)
+        #     argmax_text = self.text_encoder.ctc_decode(argmax_inds)
+        #     wer = calc_wer(target, argmax_text) * 100
+        #     cer = calc_cer(target, argmax_text) * 100
+        #
+        #     # beam_pred = self.text_encoder.ctc_beam_search(log_prob, log_prob_length, self.beam_size)[0].text
+        #     # beam_wer = calc_wer(target, beam_pred) * 100
+        #     # beam_cer = calc_cer(target, beam_pred) * 100
+        #
+        #     rows[Path(one_audio_path).name] = {
+        #         "target": target,
+        #         "raw prediction": argmax_text_raw,
+        #         "argmax predictions": argmax_text,
+        #         # "beam predictions": beam_pred,
+        #         "argmax wer": wer,
+        #         "argmax cer": cer,
+        #         # "beam_wer": beam_wer,
+        #         # "beam_cer": beam_cer,
+        #     }
+        # self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
 
     def _log_spectrogram(self, spectrogram_batch):
         spectrogram = random.choice(spectrogram_batch.cpu())

@@ -4,7 +4,6 @@ import torch
 
 from hw_ss.datasets import LibrispeechDataset, CustomDirAudioDataset, CustomAudioDataset
 from hw_ss.tests.utils import clear_log_folder_after_use
-from hw_ss.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
 from hw_ss.utils import ROOT_PATH
 from hw_ss.utils.parse_config import ConfigParser
 
@@ -15,9 +14,7 @@ class TestDataset(unittest.TestCase):
         with clear_log_folder_after_use(config_parser):
             ds = LibrispeechDataset(
                 "dev-clean",
-                text_encoder=config_parser.get_text_encoder(),
                 config_parser=config_parser,
-                max_text_length=140,
                 max_audio_length=13,
                 limit=10,
             )
@@ -32,11 +29,9 @@ class TestDataset(unittest.TestCase):
             ds = CustomDirAudioDataset(
                 audio_dir,
                 transc_dir,
-                text_encoder=config_parser.get_text_encoder(),
                 config_parser=config_parser,
                 limit=10,
-                max_audio_length=8,
-                max_text_length=130,
+                max_audio_length=8
             )
             self._assert_training_example_is_good(ds[0])
 
@@ -59,7 +54,6 @@ class TestDataset(unittest.TestCase):
 
             ds = CustomAudioDataset(
                 data=data,
-                text_encoder=config_parser.get_text_encoder(),
                 config_parser=config_parser,
             )
             self._assert_training_example_is_good(ds[0], contains_text=False)
@@ -73,7 +67,6 @@ class TestDataset(unittest.TestCase):
             ("duration", float),
             ("audio_path", str),
             ("text", str),
-            ("text_encoded", torch.Tensor)
         ]:
             self.assertIn(field, training_example, f"Error during checking field {field}")
             self.assertIsInstance(training_example[field], expected_type,
@@ -91,7 +84,7 @@ class TestDataset(unittest.TestCase):
         self.assertGreater(time_dim, 1)
 
         # check text tensor dimensions
-        batch_dim, length_dim, = training_example["text_encoded"].size()
+        batch_dim, length_dim, = training_example["text"].size()
         self.assertEqual(batch_dim, 1)
         if contains_text:
             self.assertGreater(length_dim, 1)

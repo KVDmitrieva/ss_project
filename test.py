@@ -11,7 +11,6 @@ from hw_ss.trainer import Trainer
 from hw_ss.utils import ROOT_PATH
 from hw_ss.utils.object_loading import get_dataloaders
 from hw_ss.utils.parse_config import ConfigParser
-from hw_ss.metric.utils import calc_cer, calc_wer
 
 DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
 
@@ -22,14 +21,12 @@ def main(config, out_file):
     # define cpu or gpu if possible
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # text_encoder
-    text_encoder = config.get_text_encoder()
-
     # setup data_loader instances
-    dataloaders = get_dataloaders(config, text_encoder)
+    dataloaders = get_dataloaders(config)
 
     # build model architecture
-    model = config.init_obj(config["arch"], module_model, n_class=len(text_encoder))
+    # TODO: change n_class system
+    model = config.init_obj(config["arch"], module_model, n_class=2)
     logger.info(model)
 
     logger.info("Loading checkpoint: {} ...".format(config.resume))
@@ -62,51 +59,52 @@ def main(config, out_file):
             batch["probs"] = batch["log_probs"].exp().cpu()
             batch["argmax"] = batch["probs"].argmax(-1)
 
-            for i in range(len(batch["text"])):
-                argmax = batch["argmax"][i]
-                argmax = argmax[: int(batch["log_probs_length"][i])]
-                pred_text_argmax = text_encoder.ctc_decode(argmax.cpu().numpy())
-                argmax_cer.append(calc_cer(batch["text"][i].lower(), pred_text_argmax) * 100)
-                argmax_wer.append(calc_wer(batch["text"][i].lower(), pred_text_argmax) * 100)
-
-                pred_texts_beam = text_encoder.ctc_beam_search(
-                            batch["probs"][i].cpu().numpy(),
-                            batch["log_probs_length"][i].cpu().numpy(),
-                            beam_size=20
-                        )
-                pred_texts_beam = [pred.text for pred in pred_texts_beam]
-                beam_cer.append(calc_cer(batch["text"][i].lower(), pred_texts_beam[0]) * 100)
-                beam_wer.append(calc_wer(batch["text"][i].lower(), pred_texts_beam[0]) * 100)
-
-                pred_texts_lm_beam = text_encoder.ctc_lm_beam_search(
-                            batch["log_probs"][i].cpu().numpy(),
-                            batch["log_probs_length"][i].cpu().numpy(),
-                            beam_size=100
-                        )
-                pred_texts_lm_beam = [pred.text for pred in pred_texts_lm_beam]
-                lm_beam_cer.append(calc_cer(batch["text"][i].lower(), pred_texts_lm_beam[0]) * 100)
-                lm_beam_wer.append(calc_wer(batch["text"][i].lower(), pred_texts_lm_beam[0]) * 100)
-
-                results.append(
-                    {
-                        "ground_truth": batch["text"][i],
-                        "pred_text_argmax": pred_text_argmax,
-                        "pred_text_beam_search": pred_texts_beam[:10],
-                        "pred_text_lm_beam_search": pred_texts_lm_beam[:10],
-                    }
-                )
-    results.append(
-        {
-            "CER (argmax)": sum(argmax_cer) / len(argmax_cer),
-            "WER (argmax)": sum(argmax_wer) / len(argmax_wer),
-            "CER (beam)": sum(beam_cer) / len(beam_cer),
-            "WER (beam)": sum(beam_wer) / len(beam_wer),
-            "CER (lm beam)": sum(lm_beam_cer) / len(lm_beam_cer),
-            "WER (lm beam)": sum(lm_beam_wer) / len(lm_beam_wer)
-        }
-    )
-    for key, val in results[-1].items():
-        print(key, val)
+    #         for i in range(len(batch["text"])):
+    #             argmax = batch["argmax"][i]
+    #             argmax = argmax[: int(batch["log_probs_length"][i])]
+    #             pred_text_argmax = text_encoder.ctc_decode(argmax.cpu().numpy())
+    #             argmax_cer.append(calc_cer(batch["text"][i].lower(), pred_text_argmax) * 100)
+    #             argmax_wer.append(calc_wer(batch["text"][i].lower(), pred_text_argmax) * 100)
+    #
+    #             pred_texts_beam = text_encoder.ctc_beam_search(
+    #                         batch["probs"][i].cpu().numpy(),
+    #                         batch["log_probs_length"][i].cpu().numpy(),
+    #                         beam_size=20
+    #                     )
+    #             pred_texts_beam = [pred.text for pred in pred_texts_beam]
+    #             beam_cer.append(calc_cer(batch["text"][i].lower(), pred_texts_beam[0]) * 100)
+    #             beam_wer.append(calc_wer(batch["text"][i].lower(), pred_texts_beam[0]) * 100)
+    #
+    #             pred_texts_lm_beam = text_encoder.ctc_lm_beam_search(
+    #                         batch["log_probs"][i].cpu().numpy(),
+    #                         batch["log_probs_length"][i].cpu().numpy(),
+    #                         beam_size=100
+    #                     )
+    #             pred_texts_lm_beam = [pred.text for pred in pred_texts_lm_beam]
+    #             lm_beam_cer.append(calc_cer(batch["text"][i].lower(), pred_texts_lm_beam[0]) * 100)
+    #             lm_beam_wer.append(calc_wer(batch["text"][i].lower(), pred_texts_lm_beam[0]) * 100)
+    #
+    #             results.append(
+    #                 {
+    #                     "ground_truth": batch["text"][i],
+    #                     "pred_text_argmax": pred_text_argmax,
+    #                     "pred_text_beam_search": pred_texts_beam[:10],
+    #                     "pred_text_lm_beam_search": pred_texts_lm_beam[:10],
+    #                 }
+    #             )
+    # results.append(
+    #     {
+    #         "CER (argmax)": sum(argmax_cer) / len(argmax_cer),
+    #         "WER (argmax)": sum(argmax_wer) / len(argmax_wer),
+    #         "CER (beam)": sum(beam_cer) / len(beam_cer),
+    #         "WER (beam)": sum(beam_wer) / len(beam_wer),
+    #         "CER (lm beam)": sum(lm_beam_cer) / len(lm_beam_cer),
+    #         "WER (lm beam)": sum(lm_beam_wer) / len(lm_beam_wer)
+    #     }
+    # )
+    # for key, val in results[-1].items():
+    #     print(key, val)
+    results = []
 
     with Path(out_file).open("w") as f:
         json.dump(results, f, indent=2)

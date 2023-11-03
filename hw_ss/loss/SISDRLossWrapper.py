@@ -9,4 +9,4 @@ class SISDRLossWrapper:
         self.si_sdr = SISDRMetric()
 
     def forward(self,  prediction, target, alpha=0.5, **batch) -> Tensor:
-        raise NotImplemented()
+        raise NotImplementedError()
