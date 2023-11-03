@@ -84,8 +84,7 @@ class TestDataset(unittest.TestCase):
         self.assertGreater(time_dim, 1)
 
         # check text tensor dimensions
-        batch_dim, length_dim, = training_example["text"].size()
-        self.assertEqual(batch_dim, 1)
+        length_dim = len(training_example["text"])
         if contains_text:
             self.assertGreater(length_dim, 1)
         else:
