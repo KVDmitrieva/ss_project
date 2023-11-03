@@ -9,7 +9,7 @@ from hw_ss.model.utils import TCNStack, ResNetBlock
 
 
 class SpeakerEncoder(nn.Module):
-    def __init__(self, in_channels, mid_channels, out_channels, out_features, num_blocks, resnet_params):
+    def __init__(self, in_channels, mid_channels, out_channels, avg_pool, out_features, num_blocks, resnet_params):
         super().__init__()
         self.prolog = nn.Sequential(
             nn.BatchNorm1d(in_channels),
@@ -20,7 +20,7 @@ class SpeakerEncoder(nn.Module):
         ])
         self.speaker = nn.Sequential(
             nn.Conv1d(in_channels=mid_channels, out_channels=out_channels, kernel_size=1),
-            nn.AvgPool1d(kernel_size=1)
+            nn.AvgPool1d(kernel_size=avg_pool)
         )
 
         self.epilog = nn.Sequential(
