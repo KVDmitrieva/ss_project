@@ -113,3 +113,18 @@ class MixtureDataset(BaseDataset):
 
         mixture = MixtureGenerator(speakers_file, self._mixture_dir, **mixture_init_params)
         mixture.generate_mixes(**mixture_generate_params)
+
+    def __getitem__(self, ind):
+        data_dict = self._index[ind]
+        audio_path = data_dict["path"]
+        audio_wave = self.load_audio(audio_path)
+        audio_wave, audio_spec = self.process_wave(audio_wave)
+        return {
+            "audio": audio_wave,
+            "spectrogram": audio_spec,
+            "duration": audio_wave.size(1) / self.config_parser["preprocessing"]["sr"],
+            "text": data_dict["text"],
+            "audio_path": audio_path,
+            "ref_path": data_dict["ref_path"],
+            "target_path": data_dict["target_path"]
+        }
