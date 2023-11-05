@@ -41,7 +41,7 @@ class TestDataset(unittest.TestCase):
                 generate_mixture=True,
                 mixture_params=mixture_params
             )
-            self._assert_training_example_is_good(ds[0])
+            self._assert_training_example_is_good(ds[0], contains_text=False)
 
     def test_custom_dir_dataset(self):
         config_parser = ConfigParser.get_test_configs()
