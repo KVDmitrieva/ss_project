@@ -3,7 +3,7 @@ import random
 
 from concurrent.futures import ProcessPoolExecutor
 
-from hw_ss.mixture.triplet_mixture import TripletMixture
+from hw_ss.mixture.triplet_mixture import create_mix
 
 
 class MixtureGenerator:
@@ -58,7 +58,6 @@ class MixtureGenerator:
     def generate_mixes(self, snr_levels=[0], num_workers=10, update_steps=10, **kwargs):
 
         triplets = self.generate_triplets()
-        create_mix = TripletMixture.create_mix
 
         with ProcessPoolExecutor(max_workers=num_workers) as pool:
             futures = []
