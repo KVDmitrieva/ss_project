@@ -91,7 +91,8 @@ class MixtureDataset(BaseDataset):
                     "path": mix,
                     "ref_path": ref,
                     "target_path": target,
-                    "text": ""
+                    "text": "",
+                    "audio_len": None
                 }
             )
 
@@ -105,10 +106,9 @@ class MixtureDataset(BaseDataset):
             self._mixture_dir = self._index_dir
 
         self._mixture_dir = self._mixture_dir / part / "mixture"
-        print("DEBUG", str(self._source_dir))
 
         speakers = [el.name for el in os.scandir(self._source_dir)]
-        print("DEBUG", speakers)
+
         speakers_file = [LibriSpeechSpeakerFiles(i, self._source_dir, audio_template="*.flac") for i in speakers]
 
         mixture = MixtureGenerator(speakers_file, self._mixture_dir, **mixture_init_params)
