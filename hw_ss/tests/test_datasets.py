@@ -39,7 +39,6 @@ class TestDataset(unittest.TestCase):
                 config_parser=config_parser,
                 limit=10,
                 generate_mixture=True,
-                max_audio_length=13,
                 mixture_params=mixture_params
             )
             self._assert_training_example_is_good(ds[0])

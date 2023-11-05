@@ -92,7 +92,7 @@ class MixtureDataset(BaseDataset):
                     "ref_path": ref,
                     "target_path": target,
                     "text": "",
-                    "audio_len": None
+                    "audio_len": 0.0
                 }
             )
 
