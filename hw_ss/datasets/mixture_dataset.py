@@ -88,9 +88,9 @@ class MixtureDataset(BaseDataset):
         ):
             index.append(
                 {
-                    "path": str(mix.absolute().resolve()),
-                    "ref_path": str(ref.absolute().resolve()),
-                    "target_path": str(target.absolute().resolve()),
+                    "path": mix,
+                    "ref_path": ref,
+                    "target_path": target,
                     "text": ""
                 }
             )

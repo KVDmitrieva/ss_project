@@ -9,16 +9,16 @@ from hw_ss.utils.parse_config import ConfigParser
 
 
 class TestDataset(unittest.TestCase):
-    # def test_librispeech(self):
-    #     config_parser = ConfigParser.get_test_configs()
-    #     with clear_log_folder_after_use(config_parser):
-    #         ds = LibrispeechDataset(
-    #             "dev-clean",
-    #             config_parser=config_parser,
-    #             max_audio_length=13,
-    #             limit=10,
-    #         )
-    #         self._assert_training_example_is_good(ds[0])
+    def test_librispeech(self):
+        config_parser = ConfigParser.get_test_configs()
+        with clear_log_folder_after_use(config_parser):
+            ds = LibrispeechDataset(
+                "dev-clean",
+                config_parser=config_parser,
+                max_audio_length=13,
+                limit=10,
+            )
+            self._assert_training_example_is_good(ds[0])
 
     def test_mixture(self):
         config_parser = ConfigParser.get_test_configs()
