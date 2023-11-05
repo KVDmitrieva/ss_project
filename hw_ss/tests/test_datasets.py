@@ -2,21 +2,45 @@ import unittest
 
 import torch
 
-from hw_ss.datasets import LibrispeechDataset, CustomDirAudioDataset, CustomAudioDataset
+from hw_ss.datasets import LibrispeechDataset, CustomDirAudioDataset, CustomAudioDataset, MixtureDataset
 from hw_ss.tests.utils import clear_log_folder_after_use
 from hw_ss.utils import ROOT_PATH
 from hw_ss.utils.parse_config import ConfigParser
 
 
 class TestDataset(unittest.TestCase):
-    def test_librispeech(self):
+    # def test_librispeech(self):
+    #     config_parser = ConfigParser.get_test_configs()
+    #     with clear_log_folder_after_use(config_parser):
+    #         ds = LibrispeechDataset(
+    #             "dev-clean",
+    #             config_parser=config_parser,
+    #             max_audio_length=13,
+    #             limit=10,
+    #         )
+    #         self._assert_training_example_is_good(ds[0])
+
+    def test_mixture(self):
         config_parser = ConfigParser.get_test_configs()
+
+        init_params = {"n_files": 100, "test": False}
+        gen_params = {"snr_levels": [-5, 5],
+                       "num_workers": 2,
+                       "update_steps": 100,
+                       "trim_db": 20,
+                       "vad_db": 20,
+                       "audioLen": 3}
+
+        mixture_params = {"mixture_init_params": init_params, "mixture_generate_params": gen_params}
+
         with clear_log_folder_after_use(config_parser):
-            ds = LibrispeechDataset(
+            ds = MixtureDataset(
                 "dev-clean",
                 config_parser=config_parser,
-                max_audio_length=13,
                 limit=10,
+                generate_mixture=True,
+                max_audio_length=13,
+                mixture_params=mixture_params
             )
             self._assert_training_example_is_good(ds[0])
 

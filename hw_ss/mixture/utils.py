@@ -1,3 +1,5 @@
+import os
+from glob import glob
 import numpy as np
 
 import librosa
@@ -56,3 +58,21 @@ def fix_length(s1, s2, min_or_max='max'):
         s1 = np.append(s1, np.zeros(utt_len - len(s1)))
         s2 = np.append(s2, np.zeros(utt_len - len(s2)))
     return s1, s2
+
+
+class LibriSpeechSpeakerFiles:
+    def __init__(self, speaker_id, audios_dir, audio_template="*-norm.wav"):
+        self.id = speaker_id
+        self.files = []
+        self.audio_template = audio_template
+        self.files = self.find_files_by_worker(audios_dir)
+
+    def find_files_by_worker(self, audios_dir):
+        speaker_dir = os.path.join(audios_dir, self.id)
+        chapter_dirs = os.scandir(speaker_dir)
+        files = []
+        for chapterDir in chapter_dirs:
+            files = files + [
+                file for file in glob(os.path.join(speaker_dir, chapterDir.name) + "/" + self.audio_template)
+            ]
+        return files
