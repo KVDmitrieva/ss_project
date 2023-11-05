@@ -100,7 +100,6 @@ class MixtureDataset(BaseDataset):
     def _generate_mix(self, part, mixture_init_params, mixture_generate_params):
         if self._source_dir is None:
             self._load_part(part)
-            self._source_dir = self._index_dir
 
         if self._mixture_dir is None:
             self._mixture_dir = self._index_dir
