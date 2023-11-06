@@ -11,7 +11,7 @@ class MultiTaskLossWrapper(BaseLoss):
         self.cross_entropy = CELossWrapper()
         self.si_sdr = SISDRLossWrapper()
 
-    def forward(self,  signals, log_probs, target, speaker, gamma, alphas, **batch) -> Tensor:
+    def forward(self,  signals, log_probs, alphas, gamma, target=None, speaker=None, **batch) -> Tensor:
         si_sdr_loss = 0.
         for i in range(signals.shape[0]):
             alpha = 1 - sum(alphas) if i == 0 else alphas[i - 1]
