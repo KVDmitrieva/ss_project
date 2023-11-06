@@ -1,6 +1,7 @@
 import logging
 import torch
 from typing import List
+from torch.nn.utils.rnn import pad_sequence
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +34,9 @@ def collate_fn(dataset_items: List[dict]):
         "ref_path": ref_path,
         "audio_path": audio_path,
         "target_path": target_path,
-        "ref": torch.cat(ref, dim=0),
-        "audio": torch.cat(audio, dim=0),
-        "target": torch.cat(target, dim=0),
+        "ref": pad_sequence(ref, batch_first=True),
+        "audio": pad_sequence(audio, batch_first=True),
+        "target": pad_sequence(target, batch_first=True),
         "spectrogram_length": torch.tensor(spectrogram_length),
-        "spectrogram":  torch.nn.utils.rnn.pad_sequence(spectrogram, batch_first=True).transpose(1, 2)
+        "spectrogram":  pad_sequence(spectrogram, batch_first=True).transpose(1, 2)
     }
