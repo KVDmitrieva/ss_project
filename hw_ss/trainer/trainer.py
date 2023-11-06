@@ -13,6 +13,7 @@ from tqdm import tqdm
 from hw_ss.base import BaseTrainer
 from hw_ss.logger.utils import plot_spectrogram_to_buf
 from hw_ss.utils import inf_loop, MetricTracker
+from hw_ss.metric import *
 
 
 class Trainer(BaseTrainer):
@@ -112,7 +113,8 @@ class Trainer(BaseTrainer):
                 )
                 self._log_predictions(**batch)
                 self._log_spectrogram(batch["spectrogram"])
-                self._log_audio(batch["audio"])
+                self._log_audio(batch["audio"], name="mix")
+                self._log_audio(batch["target"], name="target")
                 self._log_scalars(self.train_metrics)
                 # we don't want to reset train metrics at the start of every epoch
                 # because we are interested in recent train metrics
@@ -137,12 +139,9 @@ class Trainer(BaseTrainer):
             batch.update(outputs)
         else:
             batch["logits"] = outputs
-
-        batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1)
-        batch["log_probs_length"] = self.model.transform_input_lengths(
-            batch["spectrogram_length"]
-        )
+        batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
         batch["loss"] = self.criterion(**batch)
+
         if is_train:
             batch["loss"].backward()
             self._clip_grad_norm()
@@ -197,49 +196,20 @@ class Trainer(BaseTrainer):
             total = self.len_epoch
         return base.format(current, total, 100.0 * current / total)
 
-    def _log_predictions(
-            self,
-            text,
-            log_probs,
-            log_probs_length,
-            audio_path,
-            examples_to_log=10,
-            *args,
-            **kwargs,
-    ):
-
+    def _log_predictions(self, signals, target, audio_path, examples_to_log=10, *args, **kwargs):
         if self.writer is None:
             return
 
-        raise NotImplementedError()
-
-        # tuple = list(zip(text, log_probs, log_probs_length, audio_path))
-        # shuffle(tuple)
-        # rows = {}
-        # for target, log_prob, log_prob_length, one_audio_path in tuple[:examples_to_log]:
-        #     target = BaseTextEncoder.normalize_text(target)
-        #
-        #     argmax_inds = log_prob[:int(log_prob_length)].cpu().argmax(-1).numpy()
-        #     argmax_text_raw = self.text_encoder.decode(argmax_inds)
-        #     argmax_text = self.text_encoder.ctc_decode(argmax_inds)
-        #     wer = calc_wer(target, argmax_text) * 100
-        #     cer = calc_cer(target, argmax_text) * 100
-        #
-        #     # beam_pred = self.text_encoder.ctc_beam_search(log_prob, log_prob_length, self.beam_size)[0].text
-        #     # beam_wer = calc_wer(target, beam_pred) * 100
-        #     # beam_cer = calc_cer(target, beam_pred) * 100
-        #
-        #     rows[Path(one_audio_path).name] = {
-        #         "target": target,
-        #         "raw prediction": argmax_text_raw,
-        #         "argmax predictions": argmax_text,
-        #         # "beam predictions": beam_pred,
-        #         "argmax wer": wer,
-        #         "argmax cer": cer,
-        #         # "beam_wer": beam_wer,
-        #         # "beam_cer": beam_cer,
-        #     }
-        # self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
+        rows = {}
+        for signal, signal_target, path in zip(signals, target, audio_path)[:examples_to_log]:
+            s = signal[:, 0]
+            rows[Path(path).name] = {
+                "SDR": SDRMetric(s, signal_target),
+                "SI-SDR": SISDRMetric(s, signal_target),
+                "PESQ": PESQMetric(s, signal_target),
+                "STOI": STOIMetric(s, signal_target)
+            }
+        self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
 
     def _log_spectrogram(self, spectrogram_batch):
         spectrogram = random.choice(spectrogram_batch.cpu())
