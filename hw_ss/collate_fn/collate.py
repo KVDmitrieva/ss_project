@@ -9,24 +9,33 @@ def collate_fn(dataset_items: List[dict]):
     """
     Collate and pad fields in dataset items
     """
-    spectrogram, audio_path = [], []
-    spectrogram_length, text = [], []
-    ref_path, target_path = [], []
+    text, speaker = [], []
+    ref, ref_path = [], []
+    audio, audio_path = [], []
+    target_path, target = [], []
+    spectrogram, spectrogram_length = [], []
 
     for item in dataset_items:
         text.append(item["text"])
+        speaker.append(item["speaker_id"])
         ref_path.append(item["ref_path"])
+        ref.append(item["ref"].unsqueeze(0))
         audio_path.append(item["audio_path"])
+        audio.append(item["audio"].unsqueeze(0))
         target_path.append(item["target_path"])
+        target.append(item["target"].unsqueeze(0))
         spectrogram.append(item["spectrogram"].squeeze(0).T)
         spectrogram_length.append(item["spectrogram"].shape[2])
 
     return {
         "text": text,
-        "audio": item["audio"],
+        "speaker": speaker,
         "ref_path": ref_path,
         "audio_path": audio_path,
         "target_path": target_path,
+        "ref": torch.cat(ref, dim=0),
+        "audio": torch.cat(audio, dim=0),
+        "target": torch.cat(target, dim=0),
         "spectrogram_length": torch.tensor(spectrogram_length),
         "spectrogram":  torch.nn.utils.rnn.pad_sequence(spectrogram, batch_first=True).transpose(1, 2)
     }

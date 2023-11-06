@@ -27,11 +27,26 @@
       "num_workers": 0,
       "datasets": [
         {
-          "type": "LibrispeechDataset",
+          "type": "MixtureDataset",
           "args": {
             "part": "dev-clean",
-            "max_audio_length": 20.0,
-            "limit": 10
+            "source_dir":"/kaggle/input/librispeech/dev-clean/LibriSpeech/dev-clean",
+            "limit": 10,
+            "generate_mixture": true,
+            "mixture_params": {
+              "mixture_init_params": {
+                "n_files": 100,
+                "test": false
+              },
+              "mixture_generate_params": {
+                "snr_levels": [-5, 5],
+                "num_workers": 2,
+                "update_steps": 100,
+                "trim_db": 20,
+                "vad_db": 20,
+                "audioLen": 3
+              }
+            }
           }
         }
       ]
@@ -40,12 +55,27 @@
       "batch_size": 10,
       "num_workers": 0,
       "datasets": [
-        {
-          "type": "LibrispeechDataset",
+         {
+          "type": "MixtureDataset",
           "args": {
             "part": "dev-clean",
-            "max_audio_length": 20.0,
-            "limit": 10
+            "source_dir":"/kaggle/input/librispeech/dev-clean/LibriSpeech/dev-clean",
+            "limit": 10,
+            "generate_mixture": true,
+            "mixture_params": {
+              "mixture_init_params": {
+                "n_files": 100,
+                "test": true
+              },
+              "mixture_generate_params": {
+                "snr_levels": [-5, 5],
+                "num_workers": 2,
+                "update_steps": 100,
+                "trim_db": false,
+                "vad_db": 20,
+                "audioLen": 3
+              }
+            }
           }
         }
       ]

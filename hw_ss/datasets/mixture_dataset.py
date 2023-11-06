@@ -83,16 +83,22 @@ class MixtureDataset(BaseDataset):
         mixes = sorted(glob(os.path.join(self._mixture_dir, '*-mixed.wav')))
         targets = sorted(glob(os.path.join(self._mixture_dir, '*-target.wav')))
 
+        target_speakers = list(set([int(path.split('_')[0]) for path in targets]))
+        self._speaker_dict = {speaker: i for i, speaker in enumerate(target_speakers)}
+
         for ref, mix, target in tqdm(
                 zip(refs, mixes, targets), desc="Preparing mixture triplets"
         ):
+            target_speaker = int(mix.split('_')[0])
             index.append(
                 {
                     "path": mix,
                     "ref_path": ref,
                     "target_path": target,
                     "text": "",
-                    "audio_len": 0.0
+                    "audio_len": 0.0,
+                    "speaker": target_speaker,
+                    "speaker_id": self._speaker_dict[target_speaker]
                 }
             )
 
@@ -119,8 +125,12 @@ class MixtureDataset(BaseDataset):
         audio_path = data_dict["path"]
         audio_wave = self.load_audio(audio_path)
         audio_wave, audio_spec = self.process_wave(audio_wave)
+        ref_wave = self.load_audio(data_dict["ref_path"])
+        target_wave = self.load_audio(data_dict["target_path"])
         return {
             "audio": audio_wave,
+            "ref": ref_wave,
+            "target": target_wave,
             "spectrogram": audio_spec,
             "duration": audio_wave.size(1) / self.config_parser["preprocessing"]["sr"],
             "text": data_dict["text"],
