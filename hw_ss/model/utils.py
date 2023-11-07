@@ -4,13 +4,15 @@ from torch import nn
 
 
 class DepthWiseConv(nn.Module):
+    # https://arxiv.org/pdf/1811.11431v3.pdf
     def __init__(self, num_channels: int, kernel_size: int, dilation: int):
         super().__init__()
         self.conv = nn.Sequential(
             nn.Conv1d(in_channels=num_channels,
                       out_channels=num_channels,
-                      kernel_size=(kernel_size - 1) * dilation + 1,
-                      dilation=dilation),
+                      kernel_size=kernel_size,
+                      dilation=dilation,
+                      padding=dilation * (kernel_size - 1) // 2),
             nn.Conv1d(in_channels=num_channels,
                       out_channels=num_channels,
                       kernel_size=1)
