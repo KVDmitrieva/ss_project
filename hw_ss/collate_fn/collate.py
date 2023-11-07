@@ -31,10 +31,8 @@ def collate_fn(dataset_items: List[dict]):
         spectrogram_length.append(item["spectrogram"].shape[2])
 
     audio_target = pad_sequence(audio + target, batch_first=True)
-    audio, target = audio_target[:len(dataset_items)].transpose(1, 2), audio_target[len(audio_target):].transpose(1, 2)
-    print("COLLATE DEBUG", target.shape)
+    audio, target = audio_target[:len(dataset_items)].transpose(1, 2), audio_target[len(dataset_items):].transpose(1, 2)
     target = target.squeeze(1)
-    print("COLLATE DEBUG", target.shape)
 
     return {
         "text": text,
