@@ -204,7 +204,7 @@ class Trainer(BaseTrainer):
             return
 
         rows = {}
-        for s, signal_target, path in zip(signal, target, audio_path)[:examples_to_log]:
+        for s, signal_target, path in list(zip(signal, target, audio_path))[:examples_to_log]:
             rows[Path(path).name] = {
                 "SDR": SDRMetric(s, signal_target),
                 "SI-SDR": SISDRMetric(s, signal_target),
