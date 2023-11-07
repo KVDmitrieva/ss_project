@@ -30,6 +30,7 @@ def collate_fn(dataset_items: List[dict]):
 
     audio_target = pad_sequence(audio + target, batch_first=True)
     audio, target = audio_target[:len(dataset_items)].transpose(1, 2), audio_target[len(audio_target):].transpose(1, 2)
+    target = target.squeeze(1)
 
     return {
         "text": text,
