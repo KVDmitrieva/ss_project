@@ -10,4 +10,6 @@ class PESQMetric(BaseMetric):
         self.pesq = PerceptualEvaluationSpeechQuality(fs, mode)
 
     def __call__(self, preds: Tensor, targets: Tensor, **kwargs):
+        preds = preds.cpu().numpy()
+        targets = targets.cpu().numpy()
         return self.pesq(preds, targets)

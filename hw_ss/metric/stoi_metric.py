@@ -10,4 +10,6 @@ class STOIMetric(BaseMetric):
         self.stoi = ShortTimeObjectiveIntelligibility(fs)
 
     def __call__(self, preds: Tensor, targets: Tensor, **kwargs):
+        preds = preds.cpu().numpy()
+        targets = targets.cpu().numpy()
         return self.stoi(preds, targets)

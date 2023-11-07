@@ -15,6 +15,8 @@ class SDRMetric(BaseMetric):
         self.sdr = SignalDistortionRatio()
 
     def __call__(self, preds: Tensor, targets: Tensor, **kwargs):
+        preds = preds.cpu().numpy()
+        targets = targets.cpu().numpy()
         return self.sdr(preds, targets)
 
 
