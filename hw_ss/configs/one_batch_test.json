@@ -102,7 +102,7 @@
     "type": "SGD",
     "args": {
       "lr": 1e-3,
-      "weight_decat": 0.1
+      "weight_decay": 0.1
     }
   },
   "loss": {
