@@ -142,8 +142,7 @@ class Trainer(BaseTrainer):
             batch["logits"] = outputs
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
 
-        batch["signal"] = batch["signals"][:, 0]
-        print("DEBUG", batch["target"].shape, batch["signal"].shape)
+        batch["signal"] = batch["signals"][:, 0].squeeze(1)
         batch["loss"] = self.criterion(**batch)
 
         if is_train:
