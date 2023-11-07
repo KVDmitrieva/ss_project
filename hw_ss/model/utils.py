@@ -67,10 +67,10 @@ class ResNetBlock(nn.Module):
         super().__init__()
         self.prolog = nn.Sequential(
             nn.Conv1d(in_channels=num_channels, out_channels=num_channels, kernel_size=1),
-            nn.BatchNorm1d(1),
+            nn.BatchNorm1d(num_channels),
             nn.PReLU(),
             nn.Conv1d(in_channels=num_channels, out_channels=num_channels, kernel_size=1),
-            nn.BatchNorm1d(1)
+            nn.BatchNorm1d(num_channels)
         )
         self.epilog = nn.Sequential(
             nn.PReLU(),
