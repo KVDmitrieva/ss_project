@@ -44,8 +44,6 @@ class MixtureDataset(BaseDataset):
         if generate_mixture:
             self._generate_mix(part, **mixture_params)
 
-        assert self._mixture_dir is not None, "provide mixture path or generate mix"
-
         if part == 'train_all':
             index = sum([self._get_or_load_index(part)
                          for part in URL_LINKS if 'train' in part], [])
