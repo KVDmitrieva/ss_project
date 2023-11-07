@@ -83,7 +83,7 @@ class MixtureDataset(BaseDataset):
         mixes = sorted(glob(os.path.join(self._mixture_dir, '*-mixed.wav')))
         targets = sorted(glob(os.path.join(self._mixture_dir, '*-target.wav')))
 
-        target_speakers = list(set([int(path.split('_')[0]) for path in targets]))
+        target_speakers = list(set([int(path.split('/')[-1].split('_')[0]) for path in targets]))
         self._speaker_dict = {speaker: i for i, speaker in enumerate(target_speakers)}
 
         for ref, mix, target in tqdm(
