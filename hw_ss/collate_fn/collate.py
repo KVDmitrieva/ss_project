@@ -18,18 +18,18 @@ def collate_fn(dataset_items: List[dict]):
 
     for item in dataset_items:
         text.append(item["text"])
+        ref.append(item["ref"].T)
+        audio.append(item["audio"].T)
+        target.append(item["target"].T)
         speaker.append(item["speaker_id"])
         ref_path.append(item["ref_path"])
-        ref.append(item["ref"].unsqueeze(0))
         audio_path.append(item["audio_path"])
-        audio.append(item["audio"].unsqueeze(0))
         target_path.append(item["target_path"])
-        target.append(item["target"].unsqueeze(0))
         spectrogram.append(item["spectrogram"].squeeze(0).T)
         spectrogram_length.append(item["spectrogram"].shape[2])
 
     audio_target = pad_sequence(audio + target, batch_first=True)
-    audio, target = audio_target[:len(dataset_items)], audio_target[len(audio_target):]
+    audio, target = audio_target[:len(dataset_items)].transpose(1, 2), audio_target[len(audio_target):].transpose(1, 2)
 
     return {
         "text": text,
@@ -39,7 +39,7 @@ def collate_fn(dataset_items: List[dict]):
         "ref_path": ref_path,
         "audio_path": audio_path,
         "target_path": target_path,
-        "ref": pad_sequence(ref, batch_first=True),
+        "ref": pad_sequence(ref, batch_first=True).transpose(1, 2),
         "spectrogram_length": torch.tensor(spectrogram_length),
         "spectrogram":  pad_sequence(spectrogram, batch_first=True).transpose(1, 2)
     }
