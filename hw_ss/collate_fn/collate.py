@@ -36,10 +36,10 @@ def collate_fn(dataset_items: List[dict]):
         "text": text,
         "audio": audio,
         "target": target,
-        "speaker": speaker,
         "ref_path": ref_path,
         "audio_path": audio_path,
         "target_path": target_path,
+        "speaker": torch.tensor(speaker),
         "ref": pad_sequence(ref, batch_first=True).transpose(1, 2),
         "spectrogram_length": torch.tensor(spectrogram_length),
         "spectrogram":  pad_sequence(spectrogram, batch_first=True).transpose(1, 2)
