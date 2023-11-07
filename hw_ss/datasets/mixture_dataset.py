@@ -89,7 +89,7 @@ class MixtureDataset(BaseDataset):
         for ref, mix, target in tqdm(
                 zip(refs, mixes, targets), desc="Preparing mixture triplets"
         ):
-            target_speaker = int(mix.split('_')[0])
+            target_speaker = int(mix.split('/')[-1].split('_')[0])
             index.append(
                 {
                     "path": mix,
