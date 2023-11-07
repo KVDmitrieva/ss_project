@@ -10,6 +10,7 @@ def collate_fn(dataset_items: List[dict]):
     """
     Collate and pad fields in dataset items
     """
+    audio_len = []
     text, speaker = [], []
     ref, ref_path = [], []
     audio, audio_path = [], []
@@ -25,6 +26,7 @@ def collate_fn(dataset_items: List[dict]):
         ref_path.append(item["ref_path"])
         audio_path.append(item["audio_path"])
         target_path.append(item["target_path"])
+        audio_len.append(item["audio"].shape[-1])
         spectrogram.append(item["spectrogram"].squeeze(0).T)
         spectrogram_length.append(item["spectrogram"].shape[2])
 
@@ -40,7 +42,8 @@ def collate_fn(dataset_items: List[dict]):
         "audio_path": audio_path,
         "target_path": target_path,
         "speaker": torch.tensor(speaker),
-        "ref": pad_sequence(ref, batch_first=True).transpose(1, 2),
+        "audio_len": torch.tensor(audio_len),
         "spectrogram_length": torch.tensor(spectrogram_length),
+        "ref": pad_sequence(ref, batch_first=True).transpose(1, 2),
         "spectrogram":  pad_sequence(spectrogram, batch_first=True).transpose(1, 2)
     }

@@ -9,7 +9,7 @@ from hw_ss.model.utils import TCNStack, ResNetBlock
 
 
 class SpeakerEncoder(nn.Module):
-    def __init__(self, in_channels, mid_channels, out_channels, avg_pool, out_features, num_blocks):
+    def __init__(self, in_channels, mid_channels, out_channels, out_features, num_blocks):
         super().__init__()
         self.prolog = nn.Sequential(
             nn.BatchNorm1d(in_channels),
@@ -18,25 +18,23 @@ class SpeakerEncoder(nn.Module):
         self.res = nn.ModuleList([
             ResNetBlock(num_channels=mid_channels) for _ in range(num_blocks)
         ])
-        self.speaker = nn.Sequential(
-            nn.Conv1d(in_channels=mid_channels, out_channels=out_channels, kernel_size=1),
-            nn.AvgPool1d(kernel_size=avg_pool)
-        )
+        self.speaker = nn.Conv1d(in_channels=mid_channels, out_channels=out_channels, kernel_size=1)
 
         self.epilog = nn.Sequential(
             nn.Linear(in_features=out_channels, out_features=out_features),
             nn.Softmax()
         )
 
-    def forward(self, x):
+    def forward(self, x, audio_len):
         x = self.prolog(x)
         for resnet in self.res:
             x = resnet(x)
 
         v = self.speaker(x)
-        logits = self.epilog(v.transpose(1, 2))
+        v = v.sum(dim=-1) / audio_len
+        logits = self.epilog(v)
 
-        return logits, v
+        return logits, v.unsqueeze(-1)
 
 
 class SpeakerExtractor(nn.Module):
@@ -93,11 +91,11 @@ class SpEXModel(BaseModel):
                                stride=filter_lengths[0] // 2, padding=padding[i]) for i in range(n)
         ])
 
-    def forward(self, audio, ref, **batch) -> Union[Tensor, dict]:
+    def forward(self, audio, ref, audio_len, **batch) -> Union[Tensor, dict]:
         encoder_outputs = [speech_encoder(audio) for speech_encoder in self.speech_encoder]
 
         x = torch.cat([speech_encoder(ref) for speech_encoder in self.speech_encoder], dim=1)
-        logits, v = self.speaker_encoder(x)
+        logits, v = self.speaker_encoder(x, audio_len)
 
         masks = self.speaker_extractor(torch.cat(encoder_outputs, dim=1), v)
 

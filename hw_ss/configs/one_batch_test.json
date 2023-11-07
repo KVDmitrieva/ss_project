@@ -25,7 +25,6 @@
       "filter_lengths": [20, 80, 160],
       "encoder_params": {
         "mid_channels": 128,
-        "avg_pool":  3,
         "num_blocks":  1
       },
       "extractor_params": {

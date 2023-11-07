@@ -54,10 +54,7 @@ class TCNStack(nn.Module):
         ])
 
     def forward(self, x: Tensor, speaker_embedding: Tensor):
-        _, _, h_1 = x.shape
-        _, _, h_2 = speaker_embedding.shape
-        n = (h_1 + h_2 - 1) // h_2
-        x = torch.cat([x, speaker_embedding.repeat(1, 1, n)[:, :, :h_1]], dim=1)
+        x = torch.cat([x, speaker_embedding.repeat(1, 1, x.shape[-1])], dim=1)
         x = self.blocks[0](x)
         for block in self.blocks[1:]:
             x = block(x)
