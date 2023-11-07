@@ -1,7 +1,5 @@
 import random
-import signal
 from pathlib import Path
-from random import shuffle, sample
 
 import PIL
 import pandas as pd
@@ -9,6 +7,7 @@ import torch
 import torch.nn.functional as F
 from torch.nn.utils import clip_grad_norm_
 from torchvision.transforms import ToTensor
+from torchaudio.transforms import MelSpectrogram
 from tqdm import tqdm
 
 from hw_ss.base import BaseTrainer
@@ -113,9 +112,12 @@ class Trainer(BaseTrainer):
                     "learning rate", self.lr_scheduler.get_last_lr()[0]
                 )
                 self._log_predictions(**batch)
-                self._log_spectrogram(batch["spectrogram"])
+                self._log_spectrogram(batch["spectrogram"], "mix")
+                self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
+                self._log_spectrogram(batch["target_spectrogram"], "target")
                 self._log_audio(batch["audio"], name="mix")
                 self._log_audio(batch["target"], name="target")
+                self._log_audio(batch["signal"], name="prediction")
                 self._log_scalars(self.train_metrics)
                 # we don't want to reset train metrics at the start of every epoch
                 # because we are interested in recent train metrics
@@ -152,6 +154,10 @@ class Trainer(BaseTrainer):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
 
+        batch["prediction_spectrogram"] = MelSpectrogram(batch["signal"])
+        batch["target_spectrogram"] = MelSpectrogram(batch["target"])
+
+        # batch["pred_spectrogram"] = self.train_dataloader.
         metrics.update("loss", batch["loss"].item())
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
@@ -180,7 +186,9 @@ class Trainer(BaseTrainer):
             self.writer.set_step(epoch * self.len_epoch, part)
             self._log_scalars(self.evaluation_metrics)
             self._log_predictions(**batch)
-            self._log_spectrogram(batch["spectrogram"])
+            self._log_spectrogram(batch["spectrogram"], "mix")
+            self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
+            self._log_spectrogram(batch["target_spectrogram"], "target")
             self._log_audio(batch["audio"], name="mix")
             self._log_audio(batch["target"], name="target")
             self._log_audio(batch["signal"], name="prediction")
@@ -214,10 +222,10 @@ class Trainer(BaseTrainer):
             }
         self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
 
-    def _log_spectrogram(self, spectrogram_batch):
+    def _log_spectrogram(self, spectrogram_batch, name="spectrogram"):
         spectrogram = random.choice(spectrogram_batch.cpu())
         image = PIL.Image.open(plot_spectrogram_to_buf(spectrogram))
-        self.writer.add_image("spectrogram", ToTensor()(image))
+        self.writer.add_image(name, ToTensor()(image))
 
     def _log_audio(self, audio_batch, name="audio"):
         audio = random.choice(audio_batch.cpu())
