@@ -52,7 +52,7 @@
             "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 10,
+                "n_files": 100,
                 "test": false
               },
               "mixture_generate_params": {
@@ -81,7 +81,7 @@
             "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 10,
+                "n_files": 100,
                 "test": true
               },
               "mixture_generate_params": {
