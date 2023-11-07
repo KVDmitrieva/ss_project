@@ -52,7 +52,7 @@
             "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 4,
+                "n_files": 10,
                 "test": false
               },
               "mixture_generate_params": {
@@ -81,7 +81,7 @@
             "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 100,
+                "n_files": 10,
                 "test": true
               },
               "mixture_generate_params": {
@@ -158,6 +158,6 @@
     "visualize": "wandb",
     "wandb_project": "ss_project",
     "len_epoch": 100,
-    "grad_norm_clip": 10
+    "grad_norm_clip": 15
   }
 }
