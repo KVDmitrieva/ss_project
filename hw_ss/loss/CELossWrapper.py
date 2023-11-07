@@ -8,4 +8,4 @@ class CELossWrapper(CrossEntropyLoss):
         super().__init__()
 
     def forward(self, probs, target, **batch) -> Tensor:
-        return super().forward(probs, target)
+        return super().forward(probs.argmax(dim=-1), target)
