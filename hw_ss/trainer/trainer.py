@@ -141,6 +141,7 @@ class Trainer(BaseTrainer):
             batch["logits"] = outputs
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
         batch["loss"] = self.criterion(**batch)
+        batch["signal"] = batch["signals"][:, 0]
 
         if is_train:
             batch["loss"].backward()
@@ -196,13 +197,12 @@ class Trainer(BaseTrainer):
             total = self.len_epoch
         return base.format(current, total, 100.0 * current / total)
 
-    def _log_predictions(self, signals, target, audio_path, examples_to_log=10, *args, **kwargs):
+    def _log_predictions(self, signal, target, audio_path, examples_to_log=10, *args, **kwargs):
         if self.writer is None:
             return
 
         rows = {}
-        for signal, signal_target, path in zip(signals, target, audio_path)[:examples_to_log]:
-            s = signal[:, 0]
+        for s, signal_target, path in zip(signal, target, audio_path)[:examples_to_log]:
             rows[Path(path).name] = {
                 "SDR": SDRMetric(s, signal_target),
                 "SI-SDR": SISDRMetric(s, signal_target),

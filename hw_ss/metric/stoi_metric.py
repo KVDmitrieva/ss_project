@@ -9,7 +9,7 @@ class STOIMetric(BaseMetric):
         super().__init__(*args, **kwargs)
         self.stoi = ShortTimeObjectiveIntelligibility(fs)
 
-    def __call__(self, preds: Tensor, targets: Tensor, **kwargs):
-        preds = preds.cpu().detach()
-        targets = targets.cpu().detach()
-        return self.stoi(preds, targets)
+    def __call__(self, signal: Tensor, target: Tensor, **kwargs):
+        signal = signal.cpu().detach()
+        target = target.cpu().detach()
+        return self.stoi(signal, target)
