@@ -74,7 +74,7 @@ class ResNetBlock(nn.Module):
         )
         self.epilog = nn.Sequential(
             nn.PReLU(),
-            nn.MaxPool1d(kernel_size=(1, 3))
+            nn.MaxPool1d(kernel_size=3)
         )
 
     def forward(self, x):
