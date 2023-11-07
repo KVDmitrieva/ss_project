@@ -87,7 +87,7 @@ class SpEXModel(BaseModel):
         self.speaker_encoder = SpeakerEncoder(in_channels=3 * speech_out, out_features=n_class,
                                               out_channels=speaker_dim, **encoder_params)
         self.speaker_extractor = SpeakerExtractor(in_channels=3 * speech_out, mask_num=n,
-                                                  out_channels=speech_out, **extractor_params)
+                                                  out_channels=speech_out, speaker_dim=speaker_dim, **extractor_params)
 
         self.decoders = nn.ModuleList([
             nn.ConvTranspose1d(in_channels=n_feats, out_channels=speech_out, kernel_size=filter_lengths[i],
