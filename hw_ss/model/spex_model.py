@@ -29,13 +29,15 @@ class SpeakerEncoder(nn.Module):
         )
 
     def forward(self, x):
+        print("DEBUG", x.shape)
         x = self.prolog(x)
-
+        print("DEBUG", x.shape)
         for resnet in self.res:
             x = resnet(x)
-
+        print("DEBUG", x.shape)
         v = self.speaker(x)
-        logits = self.epilog(v)
+        print("DEBUG", v.shape)
+        logits = self.epilog(v.transpose(1, 2))
 
         return logits, v
 
