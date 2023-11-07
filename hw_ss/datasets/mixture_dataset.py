@@ -136,5 +136,6 @@ class MixtureDataset(BaseDataset):
             "text": data_dict["text"],
             "audio_path": audio_path,
             "ref_path": data_dict["ref_path"],
+            "speaker_id": data_dict["speaker_id"],
             "target_path": data_dict["target_path"]
         }
