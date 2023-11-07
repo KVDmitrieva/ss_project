@@ -22,6 +22,6 @@ class MultiTaskLossWrapper(BaseLoss):
 
         if log_probs is not None:
             ce_loss = self.cross_entropy(log_probs, speaker)
-            return si_sdr_loss + self.gamma * ce_loss
+            si_sdr_loss += self.gamma * ce_loss
 
-        return si_sdr_loss
+        return torch.mean(si_sdr_loss)
