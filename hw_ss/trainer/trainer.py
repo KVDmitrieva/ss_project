@@ -1,4 +1,5 @@
 import random
+import signal
 from pathlib import Path
 from random import shuffle, sample
 
@@ -142,6 +143,7 @@ class Trainer(BaseTrainer):
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
         batch["loss"] = self.criterion(**batch)
         batch["signal"] = batch["signals"][:, 0]
+        print("DEBUG", batch["signal"].shape, batch["target"].shape)
 
         if is_train:
             batch["loss"].backward()
