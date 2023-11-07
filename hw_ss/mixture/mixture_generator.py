@@ -1,5 +1,6 @@
 import os
 import random
+from tqdm import tqdm
 
 from concurrent.futures import ProcessPoolExecutor
 
@@ -72,9 +73,6 @@ class MixtureGenerator:
                 futures.append(pool.submit(create_mix, i, triplet,
                                            snr_levels, self.out_folder,
                                            test=self.test, **kwargs))
-
-            for i, future in enumerate(futures):
+            for future in tqdm(futures, desc="Processing files"):
                 future.result()
-                if (i + 1) % max(self.n_files // update_steps, 1) == 0:
-                    print(f"Files Processed | {i + 1} out of {self.n_files}")
 
