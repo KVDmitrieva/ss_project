@@ -113,8 +113,8 @@ class Trainer(BaseTrainer):
                 )
                 self._log_predictions(**batch)
                 self._log_spectrogram(batch["spectrogram"], "mix")
-                self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
-                self._log_spectrogram(batch["target_spectrogram"], "target")
+                # self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
+                # self._log_spectrogram(batch["target_spectrogram"], "target")
                 self._log_audio(batch["audio"], name="mix")
                 self._log_audio(batch["target"], name="target")
                 self._log_audio(batch["signal"], name="prediction")
@@ -154,8 +154,8 @@ class Trainer(BaseTrainer):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
 
-        batch["prediction_spectrogram"] = MelSpectrogram()(batch["signal"].cpu().detach())
-        batch["target_spectrogram"] = MelSpectrogram()(batch["target"].cpu().detach())
+        # batch["prediction_spectrogram"] = MelSpectrogram()(batch["signal"].cpu().detach())
+        # batch["target_spectrogram"] = MelSpectrogram()(batch["target"].cpu().detach())
 
         # batch["pred_spectrogram"] = self.train_dataloader.
         metrics.update("loss", batch["loss"].item())
@@ -187,8 +187,8 @@ class Trainer(BaseTrainer):
             self._log_scalars(self.evaluation_metrics)
             self._log_predictions(**batch)
             self._log_spectrogram(batch["spectrogram"], "mix")
-            self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
-            self._log_spectrogram(batch["target_spectrogram"], "target")
+            # self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
+            # self._log_spectrogram(batch["target_spectrogram"], "target")
             self._log_audio(batch["audio"], name="mix")
             self._log_audio(batch["target"], name="target")
             self._log_audio(batch["signal"], name="prediction")
