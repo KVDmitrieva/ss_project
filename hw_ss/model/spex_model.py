@@ -9,14 +9,14 @@ from hw_ss.model.utils import TCNStack, ResNetBlock
 
 
 class SpeakerEncoder(nn.Module):
-    def __init__(self, in_channels, mid_channels, out_channels, avg_pool, out_features, num_blocks, resnet_params):
+    def __init__(self, in_channels, mid_channels, out_channels, avg_pool, out_features, num_blocks):
         super().__init__()
         self.prolog = nn.Sequential(
             nn.BatchNorm1d(in_channels),
             nn.Conv1d(in_channels=in_channels, out_channels=mid_channels, kernel_size=1)
         )
         self.res = nn.ModuleList([
-            ResNetBlock(**resnet_params) for _ in range(num_blocks)
+            ResNetBlock(num_channels=mid_channels) for _ in range(num_blocks)
         ])
         self.speaker = nn.Sequential(
             nn.Conv1d(in_channels=mid_channels, out_channels=out_channels, kernel_size=1),
@@ -41,14 +41,15 @@ class SpeakerEncoder(nn.Module):
 
 
 class SpeakerExtractor(nn.Module):
-    def __init__(self, in_channels, mid_channels, out_channels, num_stack, mask_num, tcn_params):
+    def __init__(self, in_channels, mid_channels, out_channels, speaker_dim, num_stack, mask_num, tcn_params):
         super().__init__()
         self.prolog = nn.Sequential(
             nn.BatchNorm1d(in_channels),
             nn.Conv1d(in_channels=in_channels, out_channels=mid_channels, kernel_size=1)
         )
         self.tcn = nn.ModuleList([
-            TCNStack(**tcn_params) for _ in range(num_stack)
+            TCNStack(in_channels=mid_channels + speaker_dim,
+                     out_channels=mid_channels, **tcn_params) for _ in range(num_stack)
         ])
 
         self.mask = nn.ModuleList([
@@ -58,7 +59,7 @@ class SpeakerExtractor(nn.Module):
             ) for _ in range(mask_num)
         ])
 
-    def forward(self, y, v):
+    def forward(self, y, v) -> list[Tensor]:
         y = self.prolog(y)
 
         for tcn in self.tcn:
@@ -69,7 +70,7 @@ class SpeakerExtractor(nn.Module):
 
 
 class SpEXModel(BaseModel):
-    def __init__(self, n_feats, n_class, speech_out, padding: list,
+    def __init__(self, n_feats, n_class, speech_out, padding: list, speaker_dim,
                  filter_lengths: list, encoder_params: dict, extractor_params: dict, **batch):
         super().__init__(n_feats, n_class, **batch)
 
@@ -83,8 +84,10 @@ class SpEXModel(BaseModel):
             ) for i in range(n)
         ])
 
-        self.speaker_encoder = SpeakerEncoder(**encoder_params)
-        self.speaker_extractor = SpeakerExtractor(**extractor_params)
+        self.speaker_encoder = SpeakerEncoder(in_channels=3 * speech_out, out_features=n_class,
+                                              out_channels=speaker_dim, **encoder_params)
+        self.speaker_extractor = SpeakerExtractor(in_channels=3 * speech_out, mask_num=n,
+                                                  out_channels=speech_out, **extractor_params)
 
         self.decoders = nn.ModuleList([
             nn.ConvTranspose1d(in_channels=n_feats, out_channels=speech_out, kernel_size=filter_lengths[i],
