@@ -101,7 +101,8 @@
   "optimizer": {
     "type": "SGD",
     "args": {
-      "lr": 1e-2
+      "lr": 1e-3,
+      "weight_decat": 0.1
     }
   },
   "loss": {
@@ -141,14 +142,14 @@
     "type": "OneCycleLR",
     "args": {
       "steps_per_epoch": 100,
-      "epochs": 51,
+      "epochs": 16,
       "anneal_strategy": "cos",
-      "max_lr": 1e-2,
+      "max_lr": 1e-3,
       "pct_start": 0.2
     }
   },
   "trainer": {
-    "epochs": 50,
+    "epochs": 15,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
