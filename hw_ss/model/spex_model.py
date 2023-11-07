@@ -31,7 +31,7 @@ class SpeakerEncoder(nn.Module):
             x = resnet(x)
 
         v = self.speaker(x)
-        v = v.sum(dim=-1) / audio_len
+        v = v.sum(dim=-1) / audio_len.view(-1, 1)
         logits = self.epilog(v)
 
         return logits, v.unsqueeze(-1)
