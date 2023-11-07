@@ -52,7 +52,7 @@
             "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 100,
+                "n_files": 4,
                 "test": false
               },
               "mixture_generate_params": {
@@ -87,7 +87,7 @@
               "mixture_generate_params": {
                 "snr_levels": [-5, 5],
                 "num_workers": 2,
-                "update_steps": 100,
+                "update_steps": 4,
                 "trim_db": false,
                 "vad_db": 20,
                 "audioLen": 3
