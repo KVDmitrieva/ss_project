@@ -16,7 +16,7 @@ class MultiTaskLossWrapper(BaseLoss):
 
     def forward(self,  signals, log_probs, target=None, speaker=None, **batch) -> Tensor:
         si_sdr_loss = torch.zeros_like(signals[:, 0])
-        for i in range(signals.shape[0]):
+        for i in range(signals.shape[1]):
             alpha = 1 - sum(self.alphas) if i == 0 else self.alphas[i - 1]
             si_sdr_loss += alpha * self.si_sdr(signals[:, i], target)
 
