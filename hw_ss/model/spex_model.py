@@ -29,14 +29,11 @@ class SpeakerEncoder(nn.Module):
         )
 
     def forward(self, x):
-        print("DEBUG", x.shape)
         x = self.prolog(x)
-        print("DEBUG", x.shape)
         for resnet in self.res:
             x = resnet(x)
-        print("DEBUG", x.shape)
+
         v = self.speaker(x)
-        print("DEBUG", v.shape)
         logits = self.epilog(v.transpose(1, 2))
 
         return logits, v
@@ -67,7 +64,7 @@ class SpeakerExtractor(nn.Module):
         for tcn in self.tcn:
             y = tcn(y, v)
 
-        masks = [mask(y) for mask in self.masks]
+        masks = [mask(y) for mask in self.mask]
         return masks
 
 
