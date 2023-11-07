@@ -41,7 +41,6 @@ def main(config, out_file):
     model.eval()
 
     sisdr, sdr, pesq, stoi = [], [], [], []
-
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
             batch = Trainer.move_batch_to_device(batch, device)
@@ -54,10 +53,10 @@ def main(config, out_file):
             for i in range(len(batch["text"])):
                 s = batch["signal"][:, 0]
                 target = batch["target"]
-                sdr.append(SDRMetric(s, target))
-                sisdr.append(SISDRMetric(s, target))
-                pesq.append(PESQMetric(s, target))
-                stoi.append(STOIMetric(s, target))
+                sdr.append(SDRMetric()(s, target))
+                sisdr.append(SISDRMetric()(s, target))
+                pesq.append(PESQMetric()(s, target))
+                stoi.append(STOIMetric()(s, target))
 
     results = {
             "SDR": sum(sdr) / len(sdr),

@@ -206,10 +206,10 @@ class Trainer(BaseTrainer):
         rows = {}
         for s, signal_target, path in list(zip(signal, target, audio_path))[:examples_to_log]:
             rows[Path(path).name] = {
-                "SDR": SDRMetric(s, signal_target),
-                "SI-SDR": SISDRMetric(s, signal_target),
-                "PESQ": PESQMetric(s, signal_target),
-                "STOI": STOIMetric(s, signal_target)
+                "SDR": SDRMetric()(s, signal_target),
+                "SI-SDR": SISDRMetric()(s, signal_target),
+                "PESQ": PESQMetric()(s, signal_target),
+                "STOI": STOIMetric()(s, signal_target)
             }
         self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
 
