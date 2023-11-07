@@ -183,6 +183,7 @@ class Trainer(BaseTrainer):
             self._log_spectrogram(batch["spectrogram"])
             self._log_audio(batch["audio"], name="mix")
             self._log_audio(batch["target"], name="target")
+            self._log_audio(batch["signal"], name="prediction")
 
         # add histogram of model parameters to the tensorboard
         for name, p in self.model.named_parameters():
