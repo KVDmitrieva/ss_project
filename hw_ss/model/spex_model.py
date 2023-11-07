@@ -103,7 +103,7 @@ class SpEXModel(BaseModel):
 
         signals = []
         for i, y in enumerate(encoder_outputs):
-            signals.append(self.decoders[i](masks[i] * y).unsqueze(1))
+            signals.append(self.decoders[i](masks[i] * y).unsqueeze(1))
 
         signals = torch.cat(signals, dim=1)
         return {"signals": signals, "logits": logits}
