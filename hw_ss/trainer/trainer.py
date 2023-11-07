@@ -154,8 +154,8 @@ class Trainer(BaseTrainer):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
 
-        batch["prediction_spectrogram"] = MelSpectrogram()(batch["signal"])
-        batch["target_spectrogram"] = MelSpectrogram()(batch["target"])
+        batch["prediction_spectrogram"] = MelSpectrogram()(batch["signal"].cpu())
+        batch["target_spectrogram"] = MelSpectrogram()(batch["target"].cpu())
 
         # batch["pred_spectrogram"] = self.train_dataloader.
         metrics.update("loss", batch["loss"].item())
