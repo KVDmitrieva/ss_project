@@ -94,10 +94,10 @@ class SpEXModel(BaseModel):
                                stride=filter_lengths[0] // 2, padding=padding[i]) for i in range(n)
         ])
 
-    def forward(self, mixture, reference, **batch) -> Union[Tensor, dict]:
-        encoder_outputs = [speech_encoder(mixture) for speech_encoder in self.speech_encoder]
+    def forward(self, audio, ref, **batch) -> Union[Tensor, dict]:
+        encoder_outputs = [speech_encoder(audio) for speech_encoder in self.speech_encoder]
 
-        x = torch.cat([speech_encoder(reference) for speech_encoder in self.speech_encoder], dim=1)
+        x = torch.cat([speech_encoder(ref) for speech_encoder in self.speech_encoder], dim=1)
         logits, v = self.speaker_encoder(x)
 
         masks = self.speaker_extractor(torch.cat(encoder_outputs, dim=1), v)
