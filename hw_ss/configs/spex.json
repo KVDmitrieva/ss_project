@@ -83,7 +83,6 @@
                 "test": true
               },
               "mixture_generate_params": {
-                "snr_levels": [-5, 5],
                 "num_workers": 2,
                 "update_steps": 4,
                 "trim_db": false,

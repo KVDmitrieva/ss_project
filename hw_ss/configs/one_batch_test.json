@@ -85,7 +85,6 @@
                 "test": true
               },
               "mixture_generate_params": {
-                "snr_levels": [-5, 5],
                 "num_workers": 2,
                 "update_steps": 4,
                 "trim_db": false,
@@ -101,7 +100,7 @@
   "optimizer": {
     "type": "Adam",
     "args": {
-      "lr": 1e-3,
+      "lr": 1e-2,
       "weight_decay": 1e-5
     }
   },
