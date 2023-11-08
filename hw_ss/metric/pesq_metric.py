@@ -12,5 +12,8 @@ class PESQMetric(BaseMetric):
     def __call__(self, signal: Tensor, target: Tensor, **kwargs):
         signal = signal.cpu().detach()
         target = target.cpu().detach()
-        return self.pesq(signal, target)
+        try:
+            return self.pesq(signal, target)
+        except:
+            return -0.5
 
