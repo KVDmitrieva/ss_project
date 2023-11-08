@@ -145,7 +145,7 @@ class Trainer(BaseTrainer):
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
 
         batch["signal"] = batch["signals"][:, 0]
-        # print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape, batch['signal'].shape)
+        print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape, batch['signal'].shape)
         batch["loss"] = self.criterion(**batch)
 
         if is_train:
@@ -155,10 +155,6 @@ class Trainer(BaseTrainer):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
 
-        # batch["prediction_spectrogram"] = MelSpectrogram()(batch["signal"].cpu().detach())
-        # batch["target_spectrogram"] = MelSpectrogram()(batch["target"].cpu().detach())
-
-        # batch["pred_spectrogram"] = self.train_dataloader.
         metrics.update("loss", batch["loss"].item())
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
