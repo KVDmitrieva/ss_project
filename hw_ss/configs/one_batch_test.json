@@ -75,10 +75,10 @@
          {
           "type": "MixtureDataset",
           "args": {
-            "part": "dev-clean",
+            "part": "dev-clean-test",
             "source_dir":"/kaggle/input/librispeech/dev-clean/LibriSpeech/dev-clean",
             "limit": 10,
-            "generate_mixture": false,
+            "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 100,
