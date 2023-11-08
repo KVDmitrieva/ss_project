@@ -7,7 +7,6 @@ import torch
 import torch.nn.functional as F
 from torch.nn.utils import clip_grad_norm_
 from torchvision.transforms import ToTensor
-from torchaudio.transforms import MelSpectrogram
 from tqdm import tqdm
 
 from hw_ss.base import BaseTrainer
@@ -144,8 +143,16 @@ class Trainer(BaseTrainer):
             batch["logits"] = outputs
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
 
+        if batch["signals"].shape[-1] != batch["target"].shape[-1]:
+            print("Oops, something went wrong")
+            print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape, batch['signal'].shape)
+            diff = abs(batch["signals"].shape[-1] - batch["target"].shape[-1])
+            if batch["signals"].shape[-1] < batch["target"].shape[-1]:
+                batch["signals"] = F.pad(batch["signals"], (0, diff, 0, 0, 0, 0))
+            else:
+                batch["target"] = F.pad(batch["target"], (0, diff, 0, 0))
+
         batch["signal"] = batch["signals"][:, 0]
-        print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape, batch['signal'].shape)
         batch["loss"] = self.criterion(**batch)
 
         if is_train:
