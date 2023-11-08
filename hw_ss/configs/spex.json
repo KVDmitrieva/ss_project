@@ -40,15 +40,16 @@
   },
   "data": {
     "train": {
-      "batch_size": 50,
+      "batch_size": 25,
       "num_workers": 0,
       "datasets": [
         {
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "source_dir":"/kaggle/input/librispeech/train-clean-100/LibriSpeech/train-clean-100",
-            "generate_mixture": true,
+            "index_dir": "/kaggle/input/librispichmix/data/datasets/mixture",
+            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/train-clean-100/mixture",
+            "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 5000,
@@ -68,15 +69,16 @@
       ]
     },
     "val": {
-      "batch_size": 50,
+      "batch_size": 25,
       "num_workers": 0,
       "datasets": [
          {
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "source_dir":"/kaggle/input/librispeech/test-clean/LibriSpeech/test-clean",
-            "generate_mixture": true,
+            "index_dir": "/kaggle/input/librispichmix/data/datasets/mixture",
+            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/test-clean/mixture",
+            "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 1000,
@@ -146,7 +148,7 @@
     }
   },
   "trainer": {
-    "epochs": 50,
+    "epochs": 0,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
