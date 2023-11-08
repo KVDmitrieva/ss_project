@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 from glob import glob
+from pathlib import Path
 
 import torchaudio
 from speechbrain.utils.data_utils import download_file
@@ -39,6 +40,8 @@ class MixtureDataset(BaseDataset):
         if index_dir is None:
             index_dir = ROOT_PATH / "data" / "datasets" / "mixture"
             index_dir.mkdir(exist_ok=True, parents=True)
+        else:
+            index_dir = Path(index_dir)
 
         self._index_dir = index_dir
 
