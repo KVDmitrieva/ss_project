@@ -4,6 +4,7 @@ import os
 import shutil
 from glob import glob
 
+import torchaudio
 from speechbrain.utils.data_utils import download_file
 from tqdm import tqdm
 
@@ -88,13 +89,15 @@ class MixtureDataset(BaseDataset):
                 zip(refs, mixes, targets), desc="Preparing mixture triplets"
         ):
             target_speaker = int(mix.split('/')[-1].split('_')[0])
+            t_info = torchaudio.info(mix)
+            length = t_info.num_frames / t_info.sample_rate
             index.append(
                 {
                     "path": mix,
                     "ref_path": ref,
                     "target_path": target,
                     "text": "",
-                    "audio_len": 0.0,
+                    "audio_len": length,
                     "speaker": target_speaker,
                     "speaker_id": self._speaker_dict[target_speaker]
                 }
