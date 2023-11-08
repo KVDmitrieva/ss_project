@@ -145,6 +145,7 @@ class Trainer(BaseTrainer):
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
 
         batch["signal"] = batch["signals"][:, 0].squeeze(1)
+        print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape, batch['signal'].shape)
         batch["loss"] = self.criterion(**batch)
 
         if is_train:
