@@ -40,7 +40,7 @@
   },
   "data": {
     "train": {
-      "batch_size": 10,
+      "batch_size": 50,
       "num_workers": 0,
       "datasets": [
         {
@@ -51,7 +51,7 @@
             "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 200,
+                "n_files": 5000,
                 "test": false
               },
               "mixture_generate_params": {
@@ -68,7 +68,7 @@
       ]
     },
     "val": {
-      "batch_size": 10,
+      "batch_size": 50,
       "num_workers": 0,
       "datasets": [
          {
@@ -79,7 +79,7 @@
             "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 100,
+                "n_files": 500,
                 "test": true
               },
               "mixture_generate_params": {

@@ -99,7 +99,6 @@ class MixtureDataset(BaseDataset):
                     "speaker_id": self._speaker_dict[target_speaker]
                 }
             )
-        print("DEBUG", len(index))
         return index
 
     def _generate_mix(self, part, mixture_init_params, mixture_generate_params):
