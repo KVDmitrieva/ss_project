@@ -47,7 +47,6 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "index_dir": "/kaggle/input/librispichmix/data/datasets/mixture",
             "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/train-clean-100/mixture",
             "generate_mixture": false,
             "mixture_params": {
@@ -76,7 +75,6 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "index_dir": "/kaggle/input/librispichmix/data/datasets/mixture",
             "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/test-clean/mixture",
             "generate_mixture": false,
             "mixture_params": {
