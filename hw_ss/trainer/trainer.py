@@ -112,9 +112,7 @@ class Trainer(BaseTrainer):
                 )
                 self._log_predictions(**batch)
                 self._log_spectrogram(batch["spectrogram"], "mix")
-                self._log_audio(batch["audio"], name="mix")
-                self._log_audio(batch["target"], name="target")
-                self._log_audio(batch["signal"], name="prediction")
+                self._log_triplet_audio(batch)
                 self._log_scalars(self.train_metrics)
                 # we don't want to reset train metrics at the start of every epoch
                 # because we are interested in recent train metrics
@@ -181,9 +179,7 @@ class Trainer(BaseTrainer):
             self._log_scalars(self.evaluation_metrics)
             self._log_predictions(**batch)
             self._log_spectrogram(batch["spectrogram"], "mix")
-            self._log_audio(batch["audio"], name="mix")
-            self._log_audio(batch["target"], name="target")
-            self._log_audio(batch["signal"], name="prediction")
+            self._log_triplet_audio(batch)
 
         # add histogram of model parameters to the tensorboard
         for name, p in self.model.named_parameters():
@@ -218,6 +214,13 @@ class Trainer(BaseTrainer):
         spectrogram = random.choice(spectrogram_batch.cpu())
         image = PIL.Image.open(plot_spectrogram_to_buf(spectrogram))
         self.writer.add_image(name, ToTensor()(image))
+
+    def _log_triplet_audio(self, batch):
+        ind = random.randint(0, batch["audio"].shape[0])
+        self.writer.add_audio("mix", batch["audio"][ind].cpu(), self.config["preprocessing"]["sr"])
+        self.writer.add_audio("reference", batch["ref"][ind].cpu(), self.config["preprocessing"]["sr"])
+        self.writer.add_audio("target", batch["target"][ind].cpu(), self.config["preprocessing"]["sr"])
+        self.writer.add_audio("prediction", batch["signal"][ind].cpu(), self.config["preprocessing"]["sr"])
 
     def _log_audio(self, audio_batch, name="audio"):
         audio = random.choice(audio_batch.cpu())
