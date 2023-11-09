@@ -112,8 +112,6 @@ class Trainer(BaseTrainer):
                 )
                 self._log_predictions(**batch)
                 self._log_spectrogram(batch["spectrogram"], "mix")
-                # self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
-                # self._log_spectrogram(batch["target_spectrogram"], "target")
                 self._log_audio(batch["audio"], name="mix")
                 self._log_audio(batch["target"], name="target")
                 self._log_audio(batch["signal"], name="prediction")
@@ -142,17 +140,6 @@ class Trainer(BaseTrainer):
         else:
             batch["logits"] = outputs
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
-
-        if batch["signals"].shape[-1] != batch["target"].shape[-1]:
-            print("Oops, something went wrong")
-            print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape)
-            diff = abs(batch["signals"].shape[-1] - batch["target"].shape[-1])
-            if batch["signals"].shape[-1] < batch["target"].shape[-1]:
-                batch["signals"] = F.pad(batch["signals"], (0, diff, 0, 0, 0, 0))
-            else:
-                batch["target"] = F.pad(batch["target"], (0, diff, 0, 0))
-
-        batch["signal"] = batch["signals"][:, 0]
         batch["loss"] = self.criterion(**batch)
 
         if is_train:
@@ -161,6 +148,9 @@ class Trainer(BaseTrainer):
             self.optimizer.step()
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
+
+        batch["signal"] = batch["signals"][:, 0]
+        batch["signal"] = 20 * batch["signal"] / batch["signal"].norm(dim=-1)
 
         metrics.update("loss", batch["loss"].item())
         for met in self.metrics:
@@ -191,8 +181,6 @@ class Trainer(BaseTrainer):
             self._log_scalars(self.evaluation_metrics)
             self._log_predictions(**batch)
             self._log_spectrogram(batch["spectrogram"], "mix")
-            # self._log_spectrogram(batch["prediction_spectrogram"], "prediction")
-            # self._log_spectrogram(batch["target_spectrogram"], "target")
             self._log_audio(batch["audio"], name="mix")
             self._log_audio(batch["target"], name="target")
             self._log_audio(batch["signal"], name="prediction")
