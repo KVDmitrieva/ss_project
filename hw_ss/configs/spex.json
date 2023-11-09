@@ -21,8 +21,8 @@
       "n_class":  260,
       "speech_out":  128,
       "speaker_dim": 256,
-      "padding": [0, 30, 70],
-      "filter_lengths": [20, 80, 160],
+      "padding": [0, 15, 35],
+      "filter_lengths": [10, 40, 80],
       "encoder_params": {
         "mid_channels": 128,
         "num_blocks":  3
