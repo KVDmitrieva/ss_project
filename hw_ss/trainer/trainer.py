@@ -145,7 +145,7 @@ class Trainer(BaseTrainer):
 
         if batch["signals"].shape[-1] != batch["target"].shape[-1]:
             print("Oops, something went wrong")
-            print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape, batch['signal'].shape)
+            print("DEBUG", batch['target'].shape, batch['audio'].shape, batch['signals'].shape)
             diff = abs(batch["signals"].shape[-1] - batch["target"].shape[-1])
             if batch["signals"].shape[-1] < batch["target"].shape[-1]:
                 batch["signals"] = F.pad(batch["signals"], (0, diff, 0, 0, 0, 0))
