@@ -21,8 +21,8 @@
       "n_class":  260,
       "speech_out":  128,
       "speaker_dim": 256,
-      "padding": [0, 15, 35],
-      "filter_lengths": [10, 40, 80],
+      "padding": [0, 30, 70],
+      "filter_lengths": [20, 80, 160],
       "encoder_params": {
         "mid_channels": 128,
         "num_blocks":  3
@@ -40,7 +40,7 @@
   },
   "data": {
     "train": {
-      "batch_size": 5,
+      "batch_size": 20,
       "num_workers": 0,
       "datasets": [
         {
@@ -48,14 +48,14 @@
           "args": {
             "part": "train-clean-100",
             "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/train-clean-100/mixture",
-            "generate_mixture": false,
+            "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 5000,
                 "test": false
               },
               "mixture_generate_params": {
-                "snr_levels": [-5, 5],
+                "snr_levels": [-2, -1, 0, 1,  2],
                 "num_workers": 2,
                 "update_steps": 100,
                 "trim_db": 20,
@@ -68,7 +68,7 @@
       ]
     },
     "val": {
-      "batch_size": 5,
+      "batch_size": 20,
       "num_workers": 0,
       "datasets": [
          {
@@ -76,10 +76,10 @@
           "args": {
             "part": "test-clean",
             "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/test-clean/mixture",
-            "generate_mixture": false,
+            "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 1000,
+                "n_files": 500,
                 "test": true
               },
               "mixture_generate_params": {
