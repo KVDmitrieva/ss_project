@@ -19,20 +19,20 @@
     "args": {
       "n_feats":  1,
       "n_class":  260,
-      "speech_out":  64,
-      "speaker_dim": 128,
+      "speech_out":  128,
+      "speaker_dim": 256,
       "padding": [0, 30, 70],
       "filter_lengths": [20, 80, 160],
       "encoder_params": {
-        "mid_channels": 64,
+        "mid_channels": 128,
         "num_blocks":  3
       },
       "extractor_params": {
-        "mid_channels": 64,
+        "mid_channels": 128,
         "num_stack":  3,
         "tcn_params": {
           "block_num": 3,
-          "mid_channels": 64,
+          "mid_channels": 128,
           "kernel_size": 3
         }
       }
