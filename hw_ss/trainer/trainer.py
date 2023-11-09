@@ -150,7 +150,7 @@ class Trainer(BaseTrainer):
                 self.lr_scheduler.step()
 
         batch["signal"] = batch["signals"][:, 0]
-        batch["signal"] = 20 * batch["signal"] / batch["signal"].norm(dim=-1).veiw(-1, 1)
+        batch["signal"] = 20 * batch["signal"] / batch["signal"].norm(dim=-1).reshape(-1, 1)
 
         metrics.update("loss", batch["loss"].item())
         for met in self.metrics:
