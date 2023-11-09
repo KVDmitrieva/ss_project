@@ -29,7 +29,7 @@
       },
       "extractor_params": {
         "mid_channels": 64,
-        "num_stack":  1,
+        "num_stack":  3,
         "tcn_params": {
           "block_num": 3,
           "mid_channels": 64,
