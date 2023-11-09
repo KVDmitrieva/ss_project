@@ -1,0 +1,135 @@
+{
+  "name": "train_spex",
+  "n_gpu": 1,
+  "preprocessing": {
+    "sr": 16000,
+    "spectrogram": {
+      "type": "MelSpectrogram",
+      "args": {
+      }
+    },
+    "log_spec": true
+  },
+  "augmentations": {
+    "wave": [],
+    "spectrogram": []
+  },
+  "arch": {
+    "type": "SpEXModel",
+    "args": {
+      "n_feats":  1,
+      "n_class":  260,
+      "speech_out":  128,
+      "speaker_dim": 256,
+      "padding": [0, 30, 70],
+      "filter_lengths": [20, 80, 160],
+      "encoder_params": {
+        "mid_channels": 128,
+        "num_blocks":  3
+      },
+      "extractor_params": {
+        "mid_channels": 128,
+        "num_stack":  3,
+        "tcn_params": {
+          "block_num": 3,
+          "mid_channels": 128,
+          "kernel_size": 3
+        }
+      }
+    }
+  },
+  "data": {
+    "test": {
+      "batch_size": 1,
+      "num_workers": 0,
+      "datasets": [
+         {
+          "type": "MixtureDataset",
+          "args": {
+            "part": "test-clean",
+            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/test-clean/mixture",
+            "generate_mixture": false,
+            "mixture_params": {
+              "mixture_init_params": {
+                "n_files": 1000,
+                "test": true
+              },
+              "mixture_generate_params": {
+                "num_workers": 2,
+                "update_steps": 4,
+                "trim_db": false,
+                "vad_db": 20,
+                "audioLen": 3
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 0.01,
+            "weight_decay": 1e-05
+        }
+    },
+    "loss": {
+        "type": "MultiTaskLoss",
+        "args": {
+            "alphas": [
+                0.1,
+                0.1
+            ],
+            "gamma": 0.5
+        }
+    },
+    "metrics": [
+        {
+            "type": "SISDRMetric",
+            "args": {
+                "name": "SI-SDR"
+            }
+        },
+        {
+            "type": "SDRMetric",
+            "args": {
+                "name": "SDR"
+            }
+        },
+        {
+            "type": "PESQMetric",
+            "args": {
+                "name": "PESQ"
+            }
+        },
+        {
+            "type": "STOIMetric",
+            "args": {
+                "name": "STOI"
+            }
+        }
+    ],
+    "lr_scheduler": {
+        "type": "OneCycleLR",
+        "args": {
+            "steps_per_epoch": 100,
+            "epochs": 51,
+            "anneal_strategy": "cos",
+            "max_lr": 0.01,
+            "pct_start": 0.2
+        }
+    },
+    "trainer": {
+        "epochs": 50,
+        "save_dir": "saved/",
+        "save_period": 5,
+        "verbosity": 2,
+        "monitor": "min val_loss",
+        "early_stop": 100,
+        "visualize": "wandb",
+        "wandb_project": "ss_project",
+        "len_epoch": 100,
+        "grad_norm_clip": 15
+    }
+}
