@@ -47,8 +47,8 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "source_dir": "/kaggle/input/librispeech/train-clean-100/LibriSpeech/train-clean-100",
-            "generate_mixture": true,
+            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/train-clean-100/mixture",
+            "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 5000,
@@ -75,8 +75,8 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "source_dir": "/kaggle/input/librispeech/test-clean/LibriSpeech/test-clean",
-            "generate_mixture": true,
+            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/test-clean/mixture",
+            "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 500,
@@ -139,14 +139,14 @@
     "type": "OneCycleLR",
     "args": {
       "steps_per_epoch": 100,
-      "epochs": 11,
+      "epochs": 21,
       "anneal_strategy": "cos",
       "max_lr": 3e-3,
       "pct_start": 0.1
     }
   },
   "trainer": {
-    "epochs": 10,
+    "epochs": 20,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
