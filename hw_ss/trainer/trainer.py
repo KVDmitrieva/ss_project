@@ -140,6 +140,13 @@ class Trainer(BaseTrainer):
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
         batch["loss"] = self.criterion(**batch)
 
+        if batch["signals"].shape[-1] != batch["target"].shape[-1]:
+            diff = abs(batch["signals"].shape[-1] - batch["target"].shape[-1])
+            if batch["signals"].shape[-1] < batch["target"].shape[-1]:
+                batch["signals"] = F.pad(batch["signals"], (0, diff, 0, 0, 0, 0))
+            else:
+                batch["target"] = F.pad(batch["target"], (0, diff, 0, 0))
+
         if is_train:
             batch["loss"].backward()
             self._clip_grad_norm()
