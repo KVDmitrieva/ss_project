@@ -223,7 +223,7 @@ class Trainer(BaseTrainer):
         self.writer.add_image(name, ToTensor()(image))
 
     def _log_triplet_audio(self, batch):
-        ind = random.randint(0, batch["audio"].shape[0])
+        ind = random.randint(0, batch["audio"].shape[0] - 1)
         self.writer.add_audio("mix", batch["audio"][ind].cpu(), self.config["preprocessing"]["sr"])
         self.writer.add_audio("reference", batch["ref"][ind].cpu(), self.config["preprocessing"]["sr"])
         self.writer.add_audio("target", batch["target"][ind].cpu(), self.config["preprocessing"]["sr"])
