@@ -203,21 +203,21 @@ class Trainer(BaseTrainer):
             total = self.len_epoch
         return base.format(current, total, 100.0 * current / total)
 
-    def _log_predictions(self, signal, target, audio_path, log_probs, speaker_id, examples_to_log=10, *args, **kwargs):
+    def _log_predictions(self, signal, target, audio_path, log_probs, speaker, examples_to_log=10, *args, **kwargs):
         if self.writer is None:
             return
 
-        speaker_preds = -torch.ones(len(speaker_id)) if log_probs is None else log_probs.argmax(-1)
+        speaker_preds = -torch.ones(len(speaker)) if log_probs is None else log_probs.argmax(-1)
 
         rows = {}
-        examples = list(zip(signal, target, audio_path, speaker_preds, speaker_id))[:examples_to_log]
+        examples = list(zip(signal, target, audio_path, speaker_preds, speaker))[:examples_to_log]
         for s, signal_target, path, speaker_pred, speaker_target in examples:
             rows[Path(path).name] = {
                 "SDR": SDRMetric()(s, signal_target),
                 "SI-SDR": SISDRMetric()(s, signal_target),
                 "PESQ": PESQMetric()(s, signal_target),
                 "STOI": STOIMetric()(s, signal_target),
-                "speaker_id": speaker_target,
+                "speaker": speaker_target,
                 "speaker_prediction": speaker_pred
             }
         self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
