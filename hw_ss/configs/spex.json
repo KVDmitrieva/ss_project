@@ -98,7 +98,7 @@
   "optimizer": {
     "type": "Adam",
     "args": {
-      "lr": 1e-3,
+      "lr": 1e-2,
       "weight_decay": 1e-5
     }
   },
@@ -141,7 +141,7 @@
       "steps_per_epoch": 100,
       "epochs": 51,
       "anneal_strategy": "cos",
-      "max_lr": 1e-3,
+      "max_lr": 1e-2,
       "pct_start": 0.2
     }
   },
