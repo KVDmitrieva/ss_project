@@ -16,7 +16,7 @@ class MultiTaskLossWrapper(BaseLoss):
 
     def forward(self,  signals, target, log_probs, speaker, audio_len, **batch) -> Tensor:
         max_len = target.shape[-1]
-        mask = torch.arange(max_len).expand(len(audio_len), max_len) < audio_len.unsqueeze(1)
+        mask = torch.arange(max_len).expand(len(audio_len), max_len).to(audio_len.device) < audio_len.unsqueeze(1)
         masked_signal = torch.zeros_like(signals)
         masked_target = torch.zeros_like(target)
         masked_target[mask] = target[mask]
