@@ -106,7 +106,7 @@
     "type": "MultiTaskLoss",
     "args": {
       "alphas": [0.1, 0.1],
-      "gamma": 1.0
+      "gamma": 0.5
     }
   },
   "metrics": [
