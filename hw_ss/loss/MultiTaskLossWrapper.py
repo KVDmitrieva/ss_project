@@ -20,7 +20,7 @@ class MultiTaskLossWrapper(BaseLoss):
         masked_signal = torch.zeros_like(signals)
         masked_target = torch.zeros_like(target)
         masked_target[mask] = target[mask]
-        mask = mask.unsqueeze(1).repeat(1, 4, 1)
+        mask = mask.unsqueeze(1).repeat(1, signals.shape[1], 1)
         masked_signal[mask] = signals[mask]
 
         si_sdr_loss = torch.zeros_like(signals[:, 0])
