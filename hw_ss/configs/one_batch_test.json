@@ -47,7 +47,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "source_dir":"/kaggle/input/librispeech/train-clean-10/LibriSpeech/train-clean-100",
+            "source_dir":"/kaggle/input/librispeech/train-clean-100/LibriSpeech/train-clean-100",
             "limit": 10,
             "generate_mixture": true,
             "mixture_params": {
