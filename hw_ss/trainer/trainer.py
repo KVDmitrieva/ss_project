@@ -145,7 +145,7 @@ class Trainer(BaseTrainer):
                 batch["signals"] = F.pad(batch["signals"], (0, diff, 0, 0, 0, 0))
             else:
                 batch["target"] = F.pad(batch["target"], (0, diff, 0, 0))
-
+        print("DEBUG", batch["signals"].shape, batch["target"].shape)
         batch["loss"] = self.criterion(**batch)
         if is_train:
             batch["loss"].backward()
