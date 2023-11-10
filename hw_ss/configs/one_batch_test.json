@@ -18,7 +18,7 @@
     "type": "SpEXModel",
     "args": {
       "n_feats":  1,
-      "n_class":  40,
+      "n_class":  101,
       "speech_out":  32,
       "speaker_dim": 64,
       "padding": [0, 30, 70],
