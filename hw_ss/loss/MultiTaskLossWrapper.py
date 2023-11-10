@@ -14,11 +14,20 @@ class MultiTaskLossWrapper(BaseLoss):
         self.alphas = alphas
         self.gamma = gamma
 
-    def forward(self,  signals, target, log_probs, speaker, **batch) -> Tensor:
+    def forward(self,  signals, target, log_probs, speaker, audio_len, **batch) -> Tensor:
+        max_len = target.shape[-1]
+        mask = torch.arange(max_len).expand(len(audio_len), max_len) < audio_len.unsqueeze(1)
+        masked_signal = torch.zeros_like(signals)
+        masked_target = torch.zeros_like(target)
+        masked_target[mask] = target[mask]
+        mask = mask.unsqueeze(1).repeat(1, 4, 1)
+        masked_signal[mask] = signals[mask]
+
         si_sdr_loss = torch.zeros_like(signals[:, 0])
+
         for i in range(signals.shape[1]):
             alpha = 1 - sum(self.alphas) if i == 0 else self.alphas[i - 1]
-            si_sdr_loss -= alpha * self.si_sdr(signals[:, i], target)
+            si_sdr_loss -= alpha * self.si_sdr(masked_signal[:, i], masked_target)
 
         if log_probs is not None:
             ce_loss = self.cross_entropy(log_probs, speaker)
