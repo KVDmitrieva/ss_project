@@ -157,7 +157,7 @@ class Trainer(BaseTrainer):
         batch["signal"] = batch["signals"][:, 0]
         batch["signal"] = 20 * batch["signal"] / batch["signal"].norm(dim=-1).reshape(-1, 1)
 
-        metrics.update("loss", batch["loss"].item())
+        metrics.update("loss", batch["loss"].item(), n=batch["signal"].shape[0])
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
         return batch
