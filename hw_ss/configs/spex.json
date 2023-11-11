@@ -139,8 +139,8 @@
     "type": "ReduceLROnPlateau",
     "args": {
       "mode": "min",
-      "factor": 0.75,
-      "patience": 10,
+      "factor": 0.9,
+      "patience": 301,
       "min_lr": 1e-10
     }
   },
