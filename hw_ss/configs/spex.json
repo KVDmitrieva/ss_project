@@ -47,8 +47,8 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/train-clean-100/mixture",
-            "generate_mixture": false,
+            "source_dir": "/kaggle/input/librispeech/train-clean-100/LibriSpeech/train-clean-100",
+            "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 5000,
@@ -75,8 +75,8 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/test-clean/mixture",
-            "generate_mixture": false,
+            "source_dir": "/kaggle/input/librispeech/test-clean/LibriSpeech/test-clean",
+            "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 500,
