@@ -136,13 +136,12 @@
     }
   ],
   "lr_scheduler": {
-    "type": "OneCycleLR",
+    "type": "ReduceLROnPlateau",
     "args": {
-      "steps_per_epoch": 300,
-      "epochs": 51,
-      "anneal_strategy": "cos",
-      "max_lr": 4e-3,
-      "pct_start": 0.1
+      "mode": "min",
+      "factor": 0.5,
+      "patience": 2,
+      "min_lr": 1e-10
     }
   },
   "trainer": {
