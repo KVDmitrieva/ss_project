@@ -43,7 +43,7 @@ def main(config, out_file):
     results = []
     sisdr, sdr, pesq, stoi = [], [], [], []
     with torch.no_grad():
-        for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
+        for batch_num, batch in enumerate(tqdm(dataloaders["test"], desc="Process batch")):
             batch = Trainer.move_batch_to_device(batch, device)
             output = model(**batch)
             if type(output) is dict:
