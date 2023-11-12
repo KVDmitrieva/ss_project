@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from torch import nn
 from torch import Tensor
 
-from hw_ss.base import BaseModel
+from hw_ss.model.base_model import BaseModel
 from hw_ss.model.utils import TCNStack, ResNetBlock
 
 
