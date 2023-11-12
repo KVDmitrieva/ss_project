@@ -40,6 +40,7 @@ def main(config, out_file):
     model = model.to(device)
     model.eval()
 
+    results = []
     sisdr, sdr, pesq, stoi = [], [], [], []
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
@@ -53,19 +54,32 @@ def main(config, out_file):
             for i in range(len(batch["signals"])):
                 s = batch["signals"][i, 0]
                 target = batch["target"][i]
-                sdr.append(SDRMetric()(s, target))
-                sisdr.append(SISDRMetric()(s, target))
-                pesq.append(PESQMetric()(s, target))
-                stoi.append(STOIMetric()(s, target))
 
-    results = {
+                sdr.append(SDRMetric()(s, target).item())
+                sisdr.append(SISDRMetric()(s, target).item())
+                pesq.append(PESQMetric()(s, target).item())
+                stoi.append(STOIMetric()(s, target).item())
+
+                results.append(
+                    {
+                        "mix file": batch["audio_path"][i],
+                        "SDR": sdr[-1],
+                        "SI-SDR": sisdr[-1],
+                        "PESQ": pesq[-1],
+                        "STOI": stoi[-1],
+                    }
+                )
+
+    results.append(
+        {
             "SDR": sum(sdr) / len(sdr),
             "SI-SDR": sum(sisdr) / len(sisdr),
             "PESQ": sum(pesq) / len(pesq),
             "STOI": sum(stoi) / len(stoi),
         }
+    )
 
-    for key, val in results.items():
+    for key, val in results[-1].items():
         print(key, val)
 
     with Path(out_file).open("w") as f:
