@@ -146,7 +146,7 @@ class Trainer(BaseTrainer):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step(batch["loss"])
 
-        batch["signal"] = batch["signals"][0].detach().numpy()
+        batch["signal"] = batch["signals"][0].detach()
         batch["signal"] = 20 * batch["signal"] / batch["signal"].norm(dim=-1).reshape(-1, 1)
 
         metrics.update("loss", batch["loss"].item())
