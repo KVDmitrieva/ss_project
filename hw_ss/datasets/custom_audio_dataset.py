@@ -3,7 +3,7 @@ import logging
 import torchaudio
 from tqdm import tqdm
 
-from hw_ss.base.base_dataset import BaseDataset
+from hw_ss.datasets.base_dataset import BaseDataset
 
 logger = logging.getLogger(__name__)
 

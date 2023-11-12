@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from hw_ss.mixture.utils import LibriSpeechSpeakerFiles
 from hw_ss.mixture.mixture_generator import MixtureGenerator
-from hw_ss.base.base_dataset import BaseDataset
+from hw_ss.datasets.base_dataset import BaseDataset
 from hw_ss.utils import ROOT_PATH
 
 logger = logging.getLogger(__name__)

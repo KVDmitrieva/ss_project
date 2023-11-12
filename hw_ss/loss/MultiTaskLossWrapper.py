@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor
 
-from hw_ss.base.base_loss import BaseLoss
+from hw_ss.loss.base_loss import BaseLoss
 from hw_ss.loss.SISDRLossWrapper import SISDRLossWrapper
 from hw_ss.loss.CELossWrapper import CELossWrapper
 

@@ -3,10 +3,6 @@ import logging
 from pathlib import Path
 from glob import glob
 
-from tqdm import tqdm
-
-import torchaudio
-
 from hw_ss.datasets.custom_audio_dataset import CustomAudioDataset
 
 logger = logging.getLogger(__name__)

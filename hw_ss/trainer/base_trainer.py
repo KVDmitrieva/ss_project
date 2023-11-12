@@ -82,11 +82,11 @@ class BaseTrainer:
             self._last_epoch = epoch
             result = self._train_epoch(epoch)
 
-            # save logged informations into log dict
+            # save logged information into log dict
             log = {"epoch": epoch}
             log.update(result)
 
-            # print logged informations to the screen
+            # print logged information to the screen
             for key, value in log.items():
                 self.logger.info("    {:15s}: {}".format(str(key), value))
 

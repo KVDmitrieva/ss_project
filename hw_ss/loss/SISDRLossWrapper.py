@@ -1,6 +1,6 @@
 from torch import Tensor
 
-from hw_ss.base.base_loss import BaseLoss
+from hw_ss.loss.base_loss import BaseLoss
 from hw_ss.metric.utils import calc_si_sdr
 
 

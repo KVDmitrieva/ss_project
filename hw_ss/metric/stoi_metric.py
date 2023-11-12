@@ -1,7 +1,7 @@
 from torch import Tensor
 from torchmetrics.audio import ShortTimeObjectiveIntelligibility
 
-from hw_ss.base.base_metric import BaseMetric
+from hw_ss.metric.base_metric import BaseMetric
 
 
 class STOIMetric(BaseMetric):

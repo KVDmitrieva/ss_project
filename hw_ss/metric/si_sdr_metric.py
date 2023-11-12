@@ -1,6 +1,6 @@
 from torch import Tensor
 
-from hw_ss.base.base_metric import BaseMetric
+from hw_ss.metric.base_metric import BaseMetric
 from torchmetrics import ScaleInvariantSignalDistortionRatio
 
 
