@@ -138,14 +138,6 @@ class Trainer(BaseTrainer):
         else:
             batch["logits"] = outputs
         batch["log_probs"] = F.log_softmax(batch["logits"], dim=-1) if is_train else None
-
-        if batch["signals"].shape[-1] != batch["target"].shape[-1]:
-            diff = abs(batch["signals"].shape[-1] - batch["target"].shape[-1])
-            if batch["signals"].shape[-1] < batch["target"].shape[-1]:
-                batch["signals"] = F.pad(batch["signals"], (0, diff, 0, 0, 0, 0))
-            else:
-                batch["target"] = F.pad(batch["target"], (0, diff, 0, 0))
-
         batch["loss"] = self.criterion(**batch)
         if is_train:
             batch["loss"].backward()
@@ -154,10 +146,10 @@ class Trainer(BaseTrainer):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step(batch["loss"])
 
-        batch["signal"] = batch["signals"][:, 0]
+        batch["signal"] = batch["signals"][0].detach().numpy()
         batch["signal"] = 20 * batch["signal"] / batch["signal"].norm(dim=-1).reshape(-1, 1)
 
-        metrics.update("loss", batch["loss"].item(), n=batch["signal"].shape[0])
+        metrics.update("loss", batch["loss"].item())
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
         return batch

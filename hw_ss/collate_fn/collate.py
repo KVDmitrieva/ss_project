@@ -32,7 +32,6 @@ def collate_fn(dataset_items: List[dict]):
         spectrogram_length.append(item["spectrogram"].shape[2])
 
     audio_target = pad_sequence(audio + target, batch_first=True)
-    audio_target = F.pad(audio_target, pad=(0, 0, 0, audio_target.shape[1] % 2, 0, 0))
     audio, target = audio_target[:len(dataset_items)].transpose(1, 2), audio_target[len(dataset_items):].transpose(1, 2)
     target = target.squeeze(1)
 

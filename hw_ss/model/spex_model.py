@@ -1,8 +1,9 @@
 from typing import Union
 
 import torch
-from torch import Tensor
+import torch.nn.functional as F
 from torch import nn
+from torch import Tensor
 
 from hw_ss.base import BaseModel
 from hw_ss.model.utils import TCNStack, ResNetBlock
@@ -104,6 +105,8 @@ class SpEXModel(BaseModel):
             signals.append(self.decoders[i](masks[i] * y))
 
         signals = torch.cat(signals, dim=1)
+        diff = audio.shape[-1] - signals.shape[-1]
+        signals = F.pad(signals, pad=(0, diff, 0, 0, 0, 0))
         return {"signals": signals, "logits": logits}
 
     def transform_input_lengths(self, input_lengths):
