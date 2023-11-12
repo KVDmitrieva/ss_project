@@ -11,15 +11,13 @@ def collate_fn(dataset_items: List[dict]):
     """
     Collate and pad fields in dataset items
     """
-    audio_len = []
-    text, speaker = [], []
+    audio_len, speaker = [], []
     ref, ref_path = [], []
     audio, audio_path = [], []
     target_path, target = [], []
     spectrogram, spectrogram_length = [], []
 
     for item in dataset_items:
-        text.append(item["text"])
         ref.append(item["ref"].T)
         audio.append(item["audio"].T)
         target.append(item["target"].T)
@@ -36,7 +34,6 @@ def collate_fn(dataset_items: List[dict]):
     target = target.squeeze(1)
 
     return {
-        "text": text,
         "audio": audio,
         "target": target,
         "ref_path": ref_path,

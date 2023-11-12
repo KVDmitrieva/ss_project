@@ -19,7 +19,6 @@ class CustomAudioDataset(BaseDataset):
                     "path": mix,
                     "ref_path": ref,
                     "target_path": target,
-                    "text": "",
                     "audio_len": length,
                     "speaker": -1,
                     "speaker_id": -1

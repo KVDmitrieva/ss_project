@@ -99,7 +99,6 @@ class MixtureDataset(BaseDataset):
                     "path": mix,
                     "ref_path": ref,
                     "target_path": target,
-                    "text": "",
                     "audio_len": length,
                     "speaker": target_speaker,
                     "speaker_id": self._speaker_dict[target_speaker]
@@ -123,22 +122,3 @@ class MixtureDataset(BaseDataset):
         mixture = MixtureGenerator(speakers_file, self._mixture_dir, **mixture_init_params)
         mixture.generate_mixes(**mixture_generate_params)
 
-    def __getitem__(self, ind):
-        data_dict = self._index[ind]
-        audio_path = data_dict["path"]
-        audio_wave = self.load_audio(audio_path)
-        audio_wave, audio_spec = self.process_wave(audio_wave)
-        ref_wave = self.load_audio(data_dict["ref_path"])
-        target_wave = self.load_audio(data_dict["target_path"])
-        return {
-            "audio": audio_wave,
-            "ref": ref_wave,
-            "target": target_wave,
-            "spectrogram": audio_spec,
-            "duration": audio_wave.size(1) / self.config_parser["preprocessing"]["sr"],
-            "text": data_dict["text"],
-            "audio_path": audio_path,
-            "ref_path": data_dict["ref_path"],
-            "speaker_id": data_dict["speaker_id"],
-            "target_path": data_dict["target_path"]
-        }

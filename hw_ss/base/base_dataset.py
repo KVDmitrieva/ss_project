@@ -30,9 +30,6 @@ class BaseDataset(Dataset):
 
         self._assert_index_is_valid(index)
         index = self._filter_records_from_dataset(index, max_audio_length, limit)
-        # it's a good idea to sort index by audio length
-        # It would be easier to write length-based batch samplers later
-        # index = self._sort_index(index)
         self._index: List[dict] = index
 
     def __getitem__(self, ind):
@@ -40,12 +37,18 @@ class BaseDataset(Dataset):
         audio_path = data_dict["path"]
         audio_wave = self.load_audio(audio_path)
         audio_wave, audio_spec = self.process_wave(audio_wave)
+        ref_wave = self.load_audio(data_dict["ref_path"])
+        target_wave = self.load_audio(data_dict["target_path"])
         return {
             "audio": audio_wave,
+            "ref": ref_wave,
+            "target": target_wave,
             "spectrogram": audio_spec,
             "duration": audio_wave.size(1) / self.config_parser["preprocessing"]["sr"],
-            "text": data_dict["text"],
             "audio_path": audio_path,
+            "ref_path": data_dict["ref_path"],
+            "speaker_id": data_dict["speaker_id"],
+            "target_path": data_dict["target_path"]
         }
 
     @staticmethod
@@ -119,8 +122,4 @@ class BaseDataset(Dataset):
             )
             assert "path" in entry, (
                 "Each dataset item should include field 'path'" " - path to audio file."
-            )
-            assert "text" in entry, (
-                "Each dataset item should include field 'text'"
-                " - text transcription of the audio."
             )

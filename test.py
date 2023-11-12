@@ -50,8 +50,8 @@ def main(config, out_file):
             else:
                 batch["logits"] = output
 
-            for i in range(len(batch["text"])):
-                s = batch["signals"][:, 0]
+            for i in range(len(batch["signal"])):
+                s = batch["signal"]
                 target = batch["target"]
                 sdr.append(SDRMetric()(s, target))
                 sisdr.append(SISDRMetric()(s, target))
