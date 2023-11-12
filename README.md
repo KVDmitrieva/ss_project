@@ -28,7 +28,7 @@ cd ..
 ```
 Run test-clean
 ```shell
-!python3 test.py \
+python3 test.py \
    -c default_test_model/config.json \
    -r default_test_model/model.pth \
    -o test_result.json \

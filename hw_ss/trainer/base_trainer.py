@@ -212,7 +212,6 @@ class BaseTrainer:
             )
         self.model.load_state_dict(checkpoint["state_dict"])
 
-
         self.logger.info(
             "Pre-trained model loaded. Start training."
         )
