@@ -65,9 +65,8 @@ def main(config, out_file):
             "STOI": sum(stoi) / len(stoi),
         }
 
-    for key, val in results[-1].items():
+    for key, val in results.items():
         print(key, val)
-    results = []
 
     with Path(out_file).open("w") as f:
         json.dump(results, f, indent=2)
