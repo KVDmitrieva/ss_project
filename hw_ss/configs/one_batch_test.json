@@ -142,7 +142,7 @@
     "args": {
       "mode": "min",
       "factor": 0.5,
-      "patience": 200,
+      "patience": 50,
       "min_lr": 1e-10
     }
   },
