@@ -59,7 +59,7 @@
                 "snr_levels": [-5, 5],
                 "num_workers": 2,
                 "update_steps": 100,
-                "trim_db": 20,
+                "trim_db": false,
                 "vad_db": 20,
                 "audioLen": 3
               }
