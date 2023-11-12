@@ -156,6 +156,6 @@
     "visualize": "wandb",
     "wandb_project": "ss_project",
     "len_epoch": 100,
-    "grad_norm_clip": 50
+    "grad_norm_clip": 15
   }
 }
