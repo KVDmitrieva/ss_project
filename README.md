@@ -4,36 +4,38 @@
 
 ```shell
 pip install -r ./requirements.txt
-mkdir lm
-wget https://www.openslr.org/resources/11/3-gram.arpa.gz -P lm
-gzip -d lm/3-gram.arpa.gz
 ```
 ## Train running guide
-Add your model config to `hw_asr/configs/` and run:
+Add your model config to `hw_ss/configs/` and run:
 
 ```shell
 python3 train.py -c hw_ss/configs/your_config.json
 ```
 In order to recreate results, use `train_jasper.json`:
 ```shell
-python3 train.py -c hw_ss/configs/train_jasper.json
+python3 train.py -c hw_ss/configs/spex.json
 ```
-By default, config assumes that it is used in kaggle with [librispeech](https://www.kaggle.com/datasets/a24998667/librispeech/). If you use other trainig sources, you may want to change `data_dir` path in config.
+By default, config assumes that it is used in kaggle with [librispeechmix](https://www.kaggle.com/datasets/katedmitrieva/librispeechmix) dataset. 
+It provides ~10k training and 500 validation triplets. If you want to generate new triplets you need to remove 
+`mixture_dir` from config and set `generate_mixture` flag to `true`, also provide correct librispeech `part`.
 ## Test running guide
 First of all, download model checkpoint and its config:
 ```shell
 cd default_test_model
-wget "https://www.dropbox.com/scl/fi/10oj65gl4w66ij9b4yu5o/config.json?rlkey=teanfhvo8ppcwqxudj8cgn8m6&dl=0" -O config.json
-wget "https://www.dropbox.com/scl/fi/coj8d16hcf4og27nhxe9d/model_best-2.pth?rlkey=l88vetlrhlfomuhwjdk1idmn0&dl=0" -O checkpoint.pth
+wget "https://www.dropbox.com/scl/fi/aerdawa87ws0df81yle2z/model_best-1.pth?rlkey=nc9fnhn07bl3ptbsvrj7p4yzg&dl=0" -O model.pth
+wget "https://www.dropbox.com/scl/fi/wq2usql8qrh7rl1ldcn45/config.json.2?rlkey=i1n2mjotz23b46y54acq5v15n&dl=0" -O config.json
 cd ..
 ```
 Run test-clean
 ```shell
-python3 test.py \
-   -c default_test_model/test_lm_jasper_clean.json \
-   -r default_test_model/checkpoint.pth \
-   -o test_result_clean.json
+!python3 test.py \
+   -c default_test_model/config.json \
+   -r default_test_model/model.pth \
+   -o test_result.json \
+   -t DIR_PATH
 ```
-After running test, test_result_clean.json file should be created. All metrics would be written at the end of the file.
+`DIR_PATH` should contain three dirs: mix (for mixes), refs (for references) and targets (for targets). 
+Files in each dir are named in the following way ID-mixed.wav, ID-ref.wav, ID-target.wav for mix, ref and target respectively.
 
-Also, you can run test on test-other using `test_lm_jasper_other.json` or on your own data with option `-t`.
+After running test, `test_result.json` file should be created. All metrics would be written at the end of the file.
+
