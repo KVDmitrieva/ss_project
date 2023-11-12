@@ -3,7 +3,7 @@ from abc import abstractmethod
 import torch
 from numpy import inf
 
-from hw_ss.base import BaseModel
+from hw_ss.model.base_model import BaseModel
 from hw_ss.logger import get_visualizer
 
 
