@@ -52,7 +52,7 @@ def main(config, out_file):
 
             for i in range(len(batch["signals"])):
                 s = batch["signals"][i, 0]
-                target = batch["target"]
+                target = batch["target"][i]
                 sdr.append(SDRMetric()(s, target))
                 sisdr.append(SISDRMetric()(s, target))
                 pesq.append(PESQMetric()(s, target))
