@@ -47,8 +47,8 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "mixture_dir": "/kaggle/input/librispichmix/triplets (1)/data/datasets/mixture/train-clean-100/mixture/",
-            "generate_mixture": false,
+            "source_dir":"/kaggle/input/librispeech/train-clean-100/LibriSpeech/train-clean-100",
+            "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 5000,
@@ -58,7 +58,7 @@
                 "snr_levels": [-2, -1, 0, 1,  2],
                 "num_workers": 2,
                 "update_steps": 100,
-                "trim_db": 20,
+                "trim_db": false,
                 "vad_db": 20,
                 "audioLen": 3
               }
@@ -75,8 +75,8 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "mixture_dir":"/kaggle/input/librispichmix/triplets (1)/data/datasets/mixture/test-clean/mixture",
-            "generate_mixture": false,
+            "source_dir":"/kaggle/input/librispeech/test-clean/LibriSpeech/test-clean",
+            "generate_mixture": true,
             "mixture_params": {
               "mixture_init_params": {
                 "n_files": 500,
@@ -145,7 +145,7 @@
     }
   },
   "trainer": {
-    "epochs": 50,
+    "epochs": 1,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
@@ -154,6 +154,6 @@
     "visualize": "wandb",
     "wandb_project": "ss_project",
     "len_epoch": 300,
-    "grad_norm_clip": 15
+    "grad_norm_clip": 50
   }
 }
