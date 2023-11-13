@@ -54,7 +54,7 @@ def main(config, out_dir):
             for i in range(len(batch["signals"])):
                 s = batch["signals"][i, 0]
                 target = batch["target"][i]
-                audio_name = batch["target_path"].split('/')[-1].split('.')[0]
+                audio_name = batch["target_path"][i].split('/')[-1].split('.')[0]
 
                 if len(batch["text"][i]) > 0:
                     torchaudio.save(os.path.join(out_dir, "prediction", "audio", f"{audio_name}.wav"), s, sample_rate=16000)
