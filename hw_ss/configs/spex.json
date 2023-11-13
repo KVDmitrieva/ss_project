@@ -75,7 +75,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "mixture_dir":"/home/jupyter/mnt/datasets/librispeechmix/librispeechmix/test-clean/LibriSpeech/test-clean",
+            "mixture_dir":"/home/jupyter/mnt/datasets/librispeechmix/librispeechmix/test-clean/LibriSpeech/test-clean/mixture",
             "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
