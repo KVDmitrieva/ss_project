@@ -22,8 +22,8 @@ It provides ~10k training and 500 validation triplets. If you want to generate n
 First of all, download model checkpoint and its config:
 ```shell
 cd default_test_model
-wget "https://www.dropbox.com/scl/fi/aerdawa87ws0df81yle2z/model_best-1.pth?rlkey=nc9fnhn07bl3ptbsvrj7p4yzg&dl=0" -O model.pth
-wget "https://www.dropbox.com/scl/fi/wq2usql8qrh7rl1ldcn45/config.json.2?rlkey=i1n2mjotz23b46y54acq5v15n&dl=0" -O config.json
+wget "https://www.dropbox.com/scl/fi/nk22f0b0aetaoqh687krp/model_best-3.pth?rlkey=uov16d29r24ldq1fvky4tsi0n&dl=0" -O model.pth
+wget "https://www.dropbox.com/scl/fi/93lig6rfbofcfi11qdmf1/config.json.1?rlkey=t6ythihizlv1e5y9gan8mdlg1&dl=0" -O config.json
 cd ..
 ```
 Run test-clean
