@@ -47,7 +47,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "source_dir":"/kaggle/input/librispeech/dev-clean/LibriSpeech/test-clean",
+            "source_dir":"/kaggle/input/librispeech/test-clean/LibriSpeech/test-clean",
             "generate_mixture": true,
             "add_texts": true,
             "mixture_params": {
