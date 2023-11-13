@@ -11,6 +11,7 @@ def collate_fn(dataset_items: List[dict]):
     """
     Collate and pad fields in dataset items
     """
+    text = []
     audio_len, speaker = [], []
     ref, ref_path = [], []
     audio, audio_path = [], []
@@ -18,6 +19,9 @@ def collate_fn(dataset_items: List[dict]):
     spectrogram, spectrogram_length = [], []
 
     for item in dataset_items:
+        if item["text"] is not None:
+            text.append(item["text"])
+
         ref.append(item["ref"].T)
         audio.append(item["audio"].T)
         target.append(item["target"].T)
@@ -33,7 +37,7 @@ def collate_fn(dataset_items: List[dict]):
     audio, target = audio_target[:len(dataset_items)].transpose(1, 2), audio_target[len(dataset_items):].transpose(1, 2)
     target = target.squeeze(1)
 
-    return {
+    result = {
         "audio": audio,
         "target": target,
         "ref_path": ref_path,
@@ -45,3 +49,8 @@ def collate_fn(dataset_items: List[dict]):
         "ref": pad_sequence(ref, batch_first=True).transpose(1, 2),
         "spectrogram":  pad_sequence(spectrogram, batch_first=True).transpose(1, 2)
     }
+
+    if len(text) == len(dataset_items):
+        result["text"] = text
+
+    return result

@@ -40,6 +40,7 @@ class BaseDataset(Dataset):
         ref_wave = self.load_audio(data_dict["ref_path"])
         target_wave = self.load_audio(data_dict["target_path"])
         return {
+            "text": data_dict.get("text", None),
             "audio": audio_wave,
             "ref": ref_wave,
             "target": target_wave,

@@ -29,13 +29,15 @@ URL_LINKS = {
 
 class MixtureDataset(BaseDataset):
     def __init__(self, part, mixture_dir=None, index_dir=None, source_dir=None,
-                 generate_mixture=False, mixture_params=None, *args, **kwargs):
+                 generate_mixture=False, mixture_params=None, add_texts=False, *args, **kwargs):
         if generate_mixture:
             assert source_dir is not None or part in URL_LINKS, \
                 "Provide source dir path or choose correct librispeech part to download"
 
         self._source_dir = source_dir
         self._mixture_dir = mixture_dir
+        self._generated_triplets = None
+        self._add_texts = add_texts
 
         if index_dir is None:
             index_dir = ROOT_PATH / "data" / "datasets" / "mixture"
@@ -46,13 +48,9 @@ class MixtureDataset(BaseDataset):
         self._index_dir = index_dir
 
         if generate_mixture:
-            self._generate_mix(part, **mixture_params)
+            self._generated_triplets = self._generate_mix(part, **mixture_params)
 
-        if part == 'train_all':
-            index = sum([self._get_or_load_index(part)
-                         for part in URL_LINKS if 'train' in part], [])
-        else:
-            index = self._get_or_load_index(part)
+        index = self._get_or_load_index(part)
         super().__init__(index, *args, **kwargs)
 
     def _load_part(self, part):
@@ -104,6 +102,16 @@ class MixtureDataset(BaseDataset):
                     "speaker_id": self._speaker_dict[target_speaker]
                 }
             )
+
+            if self._add_texts:
+                idx = int(mix.split('/')[-1].split('_')[2])
+                flac_dir = Path(self._generated_triplets[idx]["target"])
+                trans_path = list(flac_dir.glob("*.trans.txt"))[0]
+                with trans_path.open() as f:
+                    for line in f:
+                        f_text = " ".join(line.split()[1:]).strip()
+                        index[-1]["text"] = f_text.lower()
+                        print("DEBUG", f_text.lower())
         return index
 
     def _generate_mix(self, part, mixture_init_params, mixture_generate_params):
@@ -120,5 +128,6 @@ class MixtureDataset(BaseDataset):
         speakers_file = [LibriSpeechSpeakerFiles(i, self._source_dir, audio_template="*.flac") for i in speakers]
 
         mixture = MixtureGenerator(speakers_file, self._mixture_dir, **mixture_init_params)
-        mixture.generate_mixes(**mixture_generate_params)
+        triplets = mixture.generate_mixes(**mixture_generate_params)
 
+        return triplets

@@ -56,7 +56,7 @@ class MixtureGenerator:
 
         return triplets
 
-    def generate_mixes(self, snr_levels=[0], num_workers=10, update_steps=10, **kwargs):
+    def generate_mixes(self, snr_levels=[0], num_workers=10, **kwargs):
 
         triplets = self.generate_triplets()
 
@@ -76,3 +76,4 @@ class MixtureGenerator:
             for future in tqdm(futures, desc="Processing files"):
                 future.result()
 
+        return triplets
