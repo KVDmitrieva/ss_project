@@ -110,7 +110,7 @@ class MixtureDataset(BaseDataset):
                 target_idx = int(target_path.split('-')[-1].split('.')[0])
 
                 text_file = '-'.join(target_file.split('-')[:-1]) + ".trans.txt"
-                text_path = "/".join(target_path.split('/')[:-1] )+ text_file
+                text_path = "/".join(target_path.split('/')[:-1]) + '/' + text_file
 
                 if Path(text_path).exists():
                     with text_path.open() as f:
