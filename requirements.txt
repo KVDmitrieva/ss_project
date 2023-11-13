@@ -1,4 +1,4 @@
-torch==2.0.0
+torch==2.0.1
 torchvision==0.15.1
 numpy
 tqdm
@@ -13,7 +13,7 @@ torch_audiomentations
 editdistance
 wandb
 pyctcdecode
-torchaudio~=2.0.0
+torchaudio~=2.0.1
 pillow
 librosa
 soundfile
