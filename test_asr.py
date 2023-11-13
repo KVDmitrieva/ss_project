@@ -41,6 +41,20 @@ def main(config, out_dir):
     model = model.to(device)
     model.eval()
 
+    out_dir = Path(out_dir)
+    if not out_dir.exists():
+        out_dir.mkdir(exist_ok=True, parents=True)
+
+    pred_audio = out_dir / "prediction" / "audio"
+    pred_text = out_dir / "prediction" / "transcriptions"
+    target_audio = out_dir / "target" / "audio"
+    target_text = out_dir / "target" / "transcriptions"
+
+    pred_audio.mkdir(exist_ok=True, parents=True)
+    pred_text.mkdir(exist_ok=True, parents=True)
+    target_audio.mkdir(exist_ok=True, parents=True)
+    target_text.mkdir(exist_ok=True, parents=True)
+
     sisdr, sdr, pesq, stoi = [], [], [], []
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"], desc="Process batch")):
@@ -57,13 +71,13 @@ def main(config, out_dir):
                 audio_name = batch["target_path"][i].split('/')[-1].split('.')[0]
 
                 if len(batch["text"][i]) > 0:
-                    torchaudio.save(os.path.join(out_dir, "prediction", "audio", f"{audio_name}.wav"), s.unsqueeze(0), sample_rate=16000)
-                    torchaudio.save(os.path.join(out_dir, "target", "audio", f"{audio_name}.wav"), target.unsqueeze(0), sample_rate=16000)
+                    torchaudio.save(pred_audio / f"{audio_name}.wav", s.unsqueeze(0), sample_rate=16000)
+                    torchaudio.save(target_audio / f"{audio_name}.wav", target.unsqueeze(0), sample_rate=16000)
 
-                    with open(os.path.join(out_dir, "prediction", "transcriptions", f"{audio_name}.txt"), "xw") as f:
+                    with open(pred_text / f"{audio_name}.txt", "xw") as f:
                         f.write(audio_name + " " + batch["text"][i])
 
-                    with open(os.path.join(out_dir, "target", "transcriptions", f"{audio_name}.txt"), "xw") as f:
+                    with open(target_text / f"{audio_name}.txt", "xw") as f:
                         f.write(audio_name + " " + batch["text"][i])
 
                 sdr.append(SDRMetric()(s, target).item())
