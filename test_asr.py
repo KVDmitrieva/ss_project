@@ -57,8 +57,8 @@ def main(config, out_dir):
                 audio_name = batch["target_path"][i].split('/')[-1].split('.')[0]
 
                 if len(batch["text"][i]) > 0:
-                    torchaudio.save(os.path.join(out_dir, "prediction", "audio", f"{audio_name}.wav"), s, sample_rate=16000)
-                    torchaudio.save(os.path.join(out_dir, "target", "audio", f"{audio_name}.wav"), s, sample_rate=16000)
+                    torchaudio.save(os.path.join(out_dir, "prediction", "audio", f"{audio_name}.wav"), s.unsqueeze(0), sample_rate=16000)
+                    torchaudio.save(os.path.join(out_dir, "target", "audio", f"{audio_name}.wav"), target.unsqueeze(0), sample_rate=16000)
 
                     with open(os.path.join(out_dir, "prediction", "transcriptions", f"{audio_name}.txt"), "xw") as f:
                         f.write(audio_name + " " + batch["text"][i])
