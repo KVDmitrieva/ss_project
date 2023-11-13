@@ -47,7 +47,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "mixture_dir": "/home/jupyter/mnt/datasets/librispeechmix/librispeechmix/data/datasets/mixture/train-clean-100/mixture",
+            "mixture_dir": "/kaggle/input/librispeechmix/data/datasets/mixture/train-clean-100/mixture",
             "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
@@ -75,7 +75,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "mixture_dir":"/home/jupyter/mnt/datasets/librispeechmix/librispeechmix/data/datasets/mixture/test-clean/mixture",
+            "mixture_dir":"/kaggle/input/librispeechmix/data/datasets/mixture/test-clean/mixture",
             "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
@@ -142,7 +142,7 @@
       "epochs": 101,
       "anneal_strategy": "cos",
       "max_lr": 4e-3,
-      "pct_start": 0.2
+      "pct_start": 0.02
     }
   },
   "trainer": {
