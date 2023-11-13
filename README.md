@@ -39,3 +39,29 @@ Files in each dir are named in the following way ID-mixed.wav, ID-ref.wav, ID-ta
 
 After running test, `test_result.json` file should be created. All metrics would be written at the end of the file.
 
+## ASR Bonus
+After downloading checkpoints run:
+```shell
+python3 test_asr.py \
+   -c default_test_model/test_spex.json \
+   -r default_test_model/model.pth
+```
+this would create `output` dir with `prediction` and `target` subdirs. Both contain test data for asr model. 
+
+Follow the installation guide for [asr](https://github.com/KVDmitrieva/asr_project), download checkpoints and then run
+```shell
+python3 test.py \
+   -c default_test_model/test_lm_jasper_clean.json \
+   -r default_test_model/checkpoint.pth \
+   -o test_result_clean.json \
+   -t "YOUR_WORKIN_DIR/ss_project/output/prediction"
+```
+and
+```shell
+python3 test.py \
+   -c default_test_model/test_lm_jasper_clean.json \
+   -r default_test_model/checkpoint.pth \
+   -o test_result_clean.json \
+   -t "YOUR_WORKIN_DIR/ss_project/output/target"
+```
+in order to get result metrics for ss_model audio output and target audio files.
