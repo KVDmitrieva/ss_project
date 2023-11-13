@@ -144,7 +144,7 @@ class Trainer(BaseTrainer):
             self._clip_grad_norm()
             self.optimizer.step()
             if self.lr_scheduler is not None:
-                self.lr_scheduler.step(batch["loss"])
+                self.lr_scheduler.step()
 
         batch["signal"] = batch["signals"][:, 0].detach()
         batch["signal"] = 20 * batch["signal"] / batch["signal"].norm(dim=-1).reshape(-1, 1)
