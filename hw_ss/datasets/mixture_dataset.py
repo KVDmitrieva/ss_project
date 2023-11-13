@@ -105,9 +105,7 @@ class MixtureDataset(BaseDataset):
 
             if self._add_texts:
                 idx = int(mix.split('/')[-1].split('_')[2])
-                print(idx)
-                print(self._generated_triplets[idx]["target"])
-                flac_dir = Path(self._generated_triplets[idx]["target"])
+                flac_dir = Path(self._generated_triplets["target"][idx])
                 trans_path = list(flac_dir.glob("*.trans.txt"))[0]
                 with trans_path.open() as f:
                     for line in f:
