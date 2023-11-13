@@ -146,10 +146,6 @@ if __name__ == "__main__":
     with ss_model_config.open() as f:
         config = ConfigParser(json.load(f), resume=args.resume)
 
-    asr_model_config = Path(args.resume).parent / "config.json"
-    with asr_model_config.open() as f:
-        config = ConfigParser(json.load(f), resume=args.resume)
-
     # update with addition configs from `args.config` if provided
     if args.config is not None:
         with Path(args.config).open() as f:
