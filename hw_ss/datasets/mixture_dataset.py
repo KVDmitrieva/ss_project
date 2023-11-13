@@ -104,7 +104,7 @@ class MixtureDataset(BaseDataset):
             )
 
             if self._add_texts:
-                idx = int(mix.split('/')[-1].split('_')[2])
+                idx = int(mix.split('/')[-1].split('_')[2].split('-')[0])
                 target_path = self._generated_triplets["target"][idx]
                 target_file = target_path.split('/')[-1]
                 target_idx = int(target_path.split('-')[-1].split('.')[0])
