@@ -47,7 +47,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "mixture_dir": "../librispeechmix/data/datasets/mixture/train-clean-100/mixture",
+            "mixture_dir": "/librispeechmix/data/datasets/mixture/train-clean-100/mixture",
             "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
@@ -75,7 +75,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "mixture_dir":"../librispeechmix/data/datasets/mixture/test-clean/mixture",
+            "mixture_dir":"/librispeechmix/data/datasets/mixture/test-clean/mixture",
             "generate_mixture": false,
             "mixture_params": {
               "mixture_init_params": {
