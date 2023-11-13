@@ -118,7 +118,7 @@ class MixtureDataset(BaseDataset):
                         index[-1]["text"] = f_text.lower()
                 else:
                     index[-1]["text"] = ""
-                print("DEBUG", index[-1]["text"])
+                print("DEBUG", target_path, text_path, index[-1]["text"])
         return index
 
     def _generate_mix(self, part, mixture_init_params, mixture_generate_params):
