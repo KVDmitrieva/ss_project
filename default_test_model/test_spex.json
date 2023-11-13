@@ -47,11 +47,12 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "mixture_dir":"/kaggle/input/librispichmix/data/datasets/mixture/test-clean/mixture",
-            "generate_mixture": false,
+            "source_dir":"/kaggle/input/librispeech/dev-clean/LibriSpeech/test-clean",
+            "generate_mixture": true,
+            "add_texts": true,
             "mixture_params": {
               "mixture_init_params": {
-                "n_files": 1000,
+                "n_files": 200,
                 "test": true
               },
               "mixture_generate_params": {

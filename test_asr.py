@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 
 import torch
+import torchaudio
 from tqdm import tqdm
 
 import hw_ss.model as module_model
@@ -14,10 +15,9 @@ from hw_ss.utils.parse_config import ConfigParser
 from hw_ss.metric import *
 
 DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
-DEFAULT_ASR_CHECKPOINT_PATH = ROOT_PATH / "asr_test_model" / "checkpoint.pth"
 
 
-def main(config, out_file):
+def main(config, out_dir):
     logger = config.get_logger("test")
 
     # define cpu or gpu if possible
@@ -41,7 +41,6 @@ def main(config, out_file):
     model = model.to(device)
     model.eval()
 
-    results = []
     sisdr, sdr, pesq, stoi = [], [], [], []
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"], desc="Process batch")):
@@ -55,36 +54,32 @@ def main(config, out_file):
             for i in range(len(batch["signals"])):
                 s = batch["signals"][i, 0]
                 target = batch["target"][i]
+                audio_name = batch["target_path"].split('/')[-1].split('.')[0]
+
+                if len(batch["text"][i]) > 0:
+                    torchaudio.save(os.path.join(out_dir, "prediction", "audio", f"{audio_name}.wav"), s, sample_rate=16000)
+                    torchaudio.save(os.path.join(out_dir, "target", "audio", f"{audio_name}.wav"), s, sample_rate=16000)
+
+                    with open(os.path.join(out_dir, "prediction", "transcriptions", f"{audio_name}.txt"), "xw") as f:
+                        f.write(audio_name + " " + batch["text"][i])
+
+                    with open(os.path.join(out_dir, "target", "transcriptions", f"{audio_name}.txt"), "xw") as f:
+                        f.write(audio_name + " " + batch["text"][i])
 
                 sdr.append(SDRMetric()(s, target).item())
                 sisdr.append(SISDRMetric()(s, target).item())
                 pesq.append(PESQMetric()(s, target).item())
                 stoi.append(STOIMetric()(s, target).item())
 
-                results.append(
-                    {
-                        "mix file": batch["audio_path"][i],
-                        "SDR": sdr[-1],
-                        "SI-SDR": sisdr[-1],
-                        "PESQ": pesq[-1],
-                        "STOI": stoi[-1],
-                    }
-                )
-
-    results.append(
-        {
+    results = {
             "SDR": sum(sdr) / len(sdr),
             "SI-SDR": sum(sisdr) / len(sisdr),
             "PESQ": sum(pesq) / len(pesq),
             "STOI": sum(stoi) / len(stoi),
         }
-    )
 
-    for key, val in results[-1].items():
+    for key, val in results.items():
         print(key, val)
-
-    with Path(out_file).open("w") as f:
-        json.dump(results, f, indent=2)
 
 
 if __name__ == "__main__":
@@ -104,13 +99,6 @@ if __name__ == "__main__":
         help="path to latest checkpoint (default: None)",
     )
     args.add_argument(
-        "-a",
-        "--add-asr",
-        default=str(DEFAULT_ASR_CHECKPOINT_PATH.absolute().resolve()),
-        type=str,
-        help="path to latest asr checkpoint (default: None)",
-    )
-    args.add_argument(
         "-d",
         "--device",
         default=None,
@@ -120,9 +108,9 @@ if __name__ == "__main__":
     args.add_argument(
         "-o",
         "--output",
-        default="output.json",
+        default="output",
         type=str,
-        help="File to write results (.json)",
+        help="Dir to write audio with texts",
     )
     args.add_argument(
         "-t",
