@@ -74,10 +74,10 @@ def main(config, out_dir):
                     torchaudio.save(pred_audio / f"{audio_name}.wav", s.unsqueeze(0), sample_rate=16000)
                     torchaudio.save(target_audio / f"{audio_name}.wav", target.unsqueeze(0), sample_rate=16000)
 
-                    with open(pred_text / f"{audio_name}.txt", "xw") as f:
+                    with open(pred_text / f"{audio_name}.txt", "w") as f:
                         f.write(audio_name + " " + batch["text"][i])
 
-                    with open(target_text / f"{audio_name}.txt", "xw") as f:
+                    with open(target_text / f"{audio_name}.txt", "w") as f:
                         f.write(audio_name + " " + batch["text"][i])
 
                 sdr.append(SDRMetric()(s, target).item())
