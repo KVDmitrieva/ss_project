@@ -47,7 +47,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "train-clean-100",
-            "source_dir":"/home/jupyter/mnt/datasets/librispeechmix/train-clean-100/LibriSpeech/train-clean-100",
+            "source_dir":"../../../librispeechmix/train-clean-100/LibriSpeech/train-clean-100",
             "limit": 10,
             "generate_mixture": true,
             "mixture_params": {
@@ -76,7 +76,7 @@
           "type": "MixtureDataset",
           "args": {
             "part": "test-clean",
-            "source_dir":"/home/jupyter/mnt/datasets/librispeechmix/test-clean/LibriSpeech/test-clean",
+            "source_dir":"../../../librispeechmix/test-clean/LibriSpeech/test-clean",
             "limit": 10,
             "generate_mixture": true,
             "mixture_params": {
