@@ -113,7 +113,7 @@ class MixtureDataset(BaseDataset):
                 text_path = "/".join(target_path.split('/')[:-1]) + '/' + text_file
 
                 if Path(text_path).exists():
-                    with text_path.open() as f:
+                    with Path(text_path).open() as f:
                         f_text = " ".join(f.readlines()[target_idx].split()[1:])
                         index[-1]["text"] = f_text.lower()
                 else:
