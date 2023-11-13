@@ -105,13 +105,20 @@ class MixtureDataset(BaseDataset):
 
             if self._add_texts:
                 idx = int(mix.split('/')[-1].split('_')[2])
-                flac_dir = Path(self._generated_triplets["target"][idx])
-                trans_path = list(flac_dir.glob("*.trans.txt"))[0]
-                with trans_path.open() as f:
-                    for line in f:
-                        f_text = " ".join(line.split()[1:]).strip()
+                target_path = self._generated_triplets["target"][idx]
+                target_file = target_path.split('/')[-1]
+                target_idx = int(target_path.split('-')[-1].split('.')[0])
+
+                text_file = '-'.join(target_file.split('-')[:-1]) + ".trans.txt"
+                text_path = target_path.split('/')[:-1] + text_file
+
+                if Path(text_path).exists():
+                    with text_path.open() as f:
+                        f_text = " ".join(f.readlines()[target_idx].split()[1:])
                         index[-1]["text"] = f_text.lower()
-                        print("DEBUG", f_text.lower())
+                else:
+                    index[-1]["text"] = ""
+                print("DEBUG", index[-1]["text"])
         return index
 
     def _generate_mix(self, part, mixture_init_params, mixture_generate_params):
